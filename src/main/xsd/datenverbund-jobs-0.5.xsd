@@ -1,0 +1,1926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.brz.gv.at/datenverbund-unis" targetNamespace="http://www.brz.gv.at/datenverbund-unis" elementFormDefault="qualified" version="1.0">
+	<!-- Root Elemente -->
+
+	<xs:element name="studienantwort" type="studienantwort"/>
+	<xs:element name="FehlerAntwort" type="FehlerAntwort"/>
+	<xs:element name="mitbelegungen" type="mitbelegungAntwort"/>
+	<xs:element name="mitbeleger" type="mitbelegungAntwortV2"/>
+	<xs:element name="meldung" type="MatrikelnummernMeldungAntwort"/>
+	<xs:element name="matrikelnummernanfrage" type="MatrikelReservierenAnfrage"/>
+	<xs:element name="matrikelnummernantwort" type="matrikelnummernantwort"/>
+	<xs:element name="matrikelpruefungantwort" type="matrikelpruefungantwort"/>
+	<xs:element name="simpleBpkResponse" type="simpleBpkResponse"/>
+	<!-- <xs:element name="stammdatenanfrage" type="stammdatenAnfrage"/> -->
+	<!-- Allgemeine Typ-Deklarationen -->
+	<!-- Pattern für UUID (Universally Unique IDentifier) gemäß RFC-4122 -->
+	<xs:simpleType name="Character">
+		<xs:restriction base="xs:string">
+			<xs:length value="1" fixed="true"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="uuidTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="NULL|[0-9|a-f|A-F]{8}-[0-9|a-f|A-F]{4}-[0-9|a-f|A-F]{4}-[0-9|a-f|A-F]{4}-[0-9|a-f|A-F]{12}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="semesterTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{4}[SW]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="geschlechtTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[MWX]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="JaNeinStr">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="j"/>
+			<xs:enumeration value="J"/>
+			<xs:enumeration value="n"/>
+			<xs:enumeration value="N"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="abstractAnfrage" abstract="true">
+		<xs:sequence>
+			<xs:element name="uuid" type="uuidTyp"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="uniSemesterAnfrage" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="be" type="beTyp"/>
+					<xs:element name="semester" type="semesterTyp"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Studierendenkey">
+		<xs:sequence>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="matrikel" type="MatrikelnummerTyp" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation xml:lang="de">
+							Element 'matrikel' ist
+							veraltet und wird in der nächsten API-Version entfernt. Bitte
+							ausschließlich Element 'matrikelnummer' verwenden!!!
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="matrikelnummer" type="MatrikelnummerTyp" minOccurs="0"/>
+			</xs:choice>
+			<xs:element name="be" type="beTyp">
+				<xs:annotation>
+					<xs:documentation>Ersetzt im Webservice-API grundsätzlich die
+						FH-Erhalterkennung. Bei Weitermeldung an BIS wird die BE-Kennung
+						automatisch in eine Erhalterkennung transformiert (u.U.).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="semester" type="semesterTyp">
+				<xs:annotation>
+					<xs:documentation>Ist auch bei Meldungen von FH obligat! Ergibt
+						sich bei BIS-Meldungen aus dem aktuellen Meldefenster (z.B.
+						BIS-Meldung April 2020 = DVUH Sommersemester 2020 = "2020S"
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="uniStudentAnfrage" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="studierendenkey" type="Studierendenkey"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="abstractAntwort">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string" minOccurs="1"/>
+			<xs:element name="fehlerliste" type="fehlerliste" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FehlerAntwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="MatrikelnummernMeldungAntwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="matrikelnummernantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="matrikelnummernliste" type="matrikelnummernliste" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="matrikelnummernliste">
+		<xs:sequence>
+			<xs:element name="matrikelnummer" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="beTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[UPFR][A-Z]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MatrikelnummerTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-6][0-9]{7}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="emailTyp">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="255"/>
+			<!-- Derzeit zu restriktiv xs:pattern value="[a-zA-Z0-9.!#$%&amp;'*+/=?^_`{|}~\-]+@[a-zA-Z0-9\-.]+\.[A-Za-z]{2,}"/ -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="emailtypTyp">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BE"/>
+			<xs:enumeration value="PR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="datenfeld">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="id">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:pattern value="[0-9]{2}"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="label" type="xs:string"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="datensatz" abstract="true">
+		<xs:sequence>
+			<xs:element name="feld" type="datenfeld" minOccurs="3" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Fehlerliste (Satzart 20) -->
+	<xs:complexType name="fehlerliste">
+		<xs:sequence>
+			<xs:element name="fehler" type="fehler" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="fehleranzahl" type="xs:integer" use="optional" default="0"/>
+	</xs:complexType>
+	<xs:complexType name="fehlerquelle">
+		<xs:sequence>
+			<xs:element name="studierendenkey" type="Studierendenkey" minOccurs="1"/>
+			<xs:element name="studiumkey" type="studienkennung" minOccurs="0"/>
+			<xs:element name="datenfeld" type="xs:string" minOccurs="0"/>
+			<xs:element name="datum" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ab API 0.6 Pflichtfeld, bis API 0.5 optional.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="fehler" final="extension restriction">
+		<xs:sequence>
+			<xs:element name="fehlernummer" type="xs:string"/>
+			<xs:element name="kategorie" type="xs:string"/>
+			<xs:element name="fehlertext" type="xs:string" minOccurs="0"/>
+			<xs:element name="massnahme" type="xs:string" minOccurs="0"/>
+			<xs:element name="feldinhalt" type="xs:string" minOccurs="0"/>
+			<xs:choice minOccurs="1">
+				<xs:element name="datenfeld" type="xs:string"/>
+				<xs:element name="quelle" type="Studierendenkey">
+					<xs:annotation>
+						<xs:documentation>ACHTUNG! Element wird ab API 0.6 durch
+							'fehlerquelle' ersetzt. In neuen Implementierungen nicht mehr
+							verwenden.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="fehlerquelle" type="fehlerquelle"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Migration von stb-service -->
+	<xs:complexType name="MatrikelReservierenAnfrage">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="kontingentblock" type="KontingentBlock" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="KontingentBlock">
+		<xs:sequence>
+			<xs:element name="anzahl" type="xs:int" default="1" minOccurs="1"/>
+			<xs:element name="be" type="xs:string" minOccurs="1"/>
+			<xs:element name="sj" type="xs:int" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MatrikelMeldungAnfrage">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="personmeldung" type="PersonMeldungV2"/>
+					<xs:element name="ernpmeldung" type="ErnpMeldungV2" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PersonMeldungV2">
+		<xs:sequence>
+			<xs:element name="be" type="xs:string"/>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="matrikel" type="MatrikelnummerTyp" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation xml:lang="de">
+							Element 'matrikel' ist
+							veraltet und wird in der nächsten API-Version entfernt. Bitte
+							ausschließlich Element 'matrikelnummer' verwenden!!!
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="matrikelnummer" type="MatrikelnummerTyp" minOccurs="0"/>
+			</xs:choice>
+			<xs:element name="vorname" type="xs:string"/>
+			<xs:element name="nachname" type="xs:string"/>
+			<xs:element name="geschlecht" type="geschlechtTyp"/>
+			<xs:element name="gebdat" type="xs:string"/>
+			<xs:element name="svnr" type="xs:string"/>
+			<xs:element name="plz" type="xs:string"/>
+			<xs:element name="staat" type="xs:string"/>
+			<xs:element name="matura" type="xs:string"/>
+			<xs:element name="writeonerror" type="xs:string" minOccurs="0"/>
+			<xs:element name="bpk" type="bpkTyp" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ErnpMeldungV2">
+		<xs:sequence>
+			<xs:element name="dokumentnr" type="xs:string"/>
+			<xs:element name="dokumenttyp" type="xs:string"/>
+			<xs:element name="ausgabedatum" type="xs:string"/>
+			<xs:element name="ausstellBehoerde" type="xs:string"/>
+			<xs:element name="ausstellland" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Mitbelegungen (Satzart 60/61/62) -->
+	<xs:complexType name="mitbelegungStudierende">
+		<xs:complexContent>
+			<xs:extension base="datensatz"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="mitbelegungStudien">
+		<xs:complexContent>
+			<xs:extension base="datensatz"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="mitbelegungAbschluss">
+		<xs:complexContent>
+			<xs:extension base="datensatz"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="mitbelegungAntwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="be" type="xs:string"/>
+					<xs:element name="semester" type="xs:string"/>
+					<xs:element name="datenstand" type="xs:string"/>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="student" type="mitbelegungStudierende"/>
+						<xs:element name="studium" type="mitbelegungStudien"/>
+						<xs:element name="pruefung" type="mitbelegungAbschluss"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="mitbelegungAntwortV2">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="be" type="xs:string"/>
+					<xs:element name="semester" type="xs:string"/>
+					<xs:element name="datenstand" type="xs:string"/>
+					<xs:element name="studentInfo" type="studentInfoMitbelegung" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studentInfo">
+		<xs:complexContent>
+			<xs:extension base="studentInfoBasisAdressen">
+				<xs:sequence>
+					<xs:element name="beitragstatus">
+						<xs:annotation>
+							<xs:documentation>Ist auch für FH notwendig: "X" (ÖH-Beitrag +
+								FH-Studienbeitrag), "O" (Buchstabe O = Ohne ÖH-Beitragspflicht),
+								"0" (Ziffer 0 = Mitbeleger).
+							</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="[ABCDdEFGHIJLMNOPQRSTUVWXZ0]"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:choice>
+						<xs:element name="emailliste" type="emailListe"/>
+						<xs:element name="emailadressen" type="emailadressenListe">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">Element
+									'emailadressen' ist veraltet und wird in der nächsten
+									API-Version entfernt. Bitte ausschließlich Element 'emailliste'
+									verwenden!!!</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studentInfoMitbelegung">
+		<xs:complexContent>
+			<xs:extension base="studentInfo">
+				<xs:sequence>
+					<xs:choice minOccurs="1" maxOccurs="1">
+						<xs:element name="matrikel" type="MatrikelnummerTyp" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">
+									Element 'matrikel'
+									ist veraltet und wird in der nächsten API-Version entfernt.
+									Bitte ausschließlich Element 'matrikelnummer' verwenden!!!
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="matrikelnummer" type="MatrikelnummerTyp" minOccurs="0"/>
+					</xs:choice>
+					<xs:element name="studienliste" type="studienliste" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="emailadressenListe">
+		<xs:sequence>
+			<xs:element name="email" type="emailadresseMitTyp" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="emailadresseMitTyp">
+		<xs:sequence>
+			<xs:element name="typ" type="xs:string"/>
+			<xs:element name="adresse" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="emailListe">
+		<xs:sequence>
+			<xs:element name="email" type="emailMitTyp" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="emailMitTyp">
+		<xs:sequence>
+			<xs:element name="emailadresse" type="emailTyp" minOccurs="1"/>
+			<xs:element name="emailtyp" type="emailtypTyp" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="adressenListe">
+		<xs:sequence>
+			<xs:element name="adresse" type="adresse" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="adresse">
+		<xs:sequence>
+			<xs:element name="strasse" type="xs:string"/>
+			<xs:element name="plz" type="plzTyp"/>
+			<xs:element name="ort" type="xs:string"/>
+			<xs:element name="staat" type="xs:string"/>
+			<xs:element name="typ" type="adresstyp"/>
+			<xs:element name="coname" type="xs:string" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="adresstyp" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="H"/>
+			<xs:enumeration value="S"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="studienliste">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Liste von Studien
+				inklusive Prüfungen und Abschlüsse. Verwende diese Variante für
+				Responses, nicht aber für Request-Elemente, da hier die
+				Prüfungen und Abschlüsse getrennt zu melden sind.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="studium" type="studium" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="studiengang" type="StudiumMeldungFH" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="lehrgang" type="LehrgangMeldungFH" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="StudienDaten">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Liste von Studien ohne
+				Prüfungsdaten. Verwende diese Variante bei der Meldung neuer
+				Studiendaten oder
+				wenn die zugehörigen Prüfungen und Abschlüsse
+				bereits in einem anderen Element dargestellt werden.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="studium" type="StudiumMeldung" minOccurs="1" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>UNI/PH müssen diese Variante verwenden!
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:choice minOccurs="1" maxOccurs="unbounded">
+					<xs:element name="studiengang" type="StudiumMeldungFH"/>
+					<xs:element name="lehrgang" type="LehrgangMeldungFH"/>
+				</xs:choice>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StudienDatenFH">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">Liste von Studien ohne
+				Prüfungsdaten. Verwende diese Variante bei der Meldung neuer
+				Studiendaten von Fachhochschulen, wenn die Prüfungsdaten
+				bereits in einem anderen Element dargestellt werden.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="studium" type="StudiumMeldung" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StudiumMeldung">
+		<xs:annotation>
+			<xs:documentation>
+				Meldung von Studien gemäß Universitäts- oder Hochschulgesetz.
+				Für Meldungen gemäß Fachhochschulgesezt verwenden Sie
+				`StudiumMeldungFH` oder `LehrgangMeldungFH`.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="studienkennung" type="studienkennung" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="studienplan" type="studienplan" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="zulassungsdatum" type="xs:date" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="zulassungsstatus" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="beendigungsdatum" type="xs:date" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="meldestatus" type="meldestatusTyp" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Element ist im Batch-Szenario unter dem Namen 
+					"Fortsetzungskennzeichen" bekannt.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="zugangsberechtigung" type="zugangsberechtigung" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="mobilitaet" type="mobilitaet" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ab API 0.5 kann "von"/"bis" angegeben werden.
+						Damit sind ggf. auch meherer Mobilitäten pro Semester und Studium
+						zu unterscheiden.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LehrgangMeldungFH">
+		<xs:sequence>
+			<xs:element name="lehrgangsnr" type="studienkennungTyp" minOccurs="1"/>
+			<xs:group ref="StudLehrgangMeldungFH"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="orgformTyp">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="StudiumMeldungFH">
+		<xs:sequence>
+			<xs:element name="stgkz" type="studienkennungTyp" minOccurs="1"/>
+			<xs:element name="orgformcode" type="orgformTyp" minOccurs="1"/>
+			<xs:element name="ausbildungssemester" minOccurs="1">
+				<xs:annotation>
+					<xs:documentation>HINWEIS: Das Bezugsstemester erwartet der Datenverbund im studierendenkey!!!</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="2"/>
+						<xs:enumeration value="3"/>
+						<xs:enumeration value="4"/>
+						<xs:enumeration value="5"/>
+						<xs:enumeration value="6"/>
+						<xs:enumeration value="7"/>
+						<xs:enumeration value="8"/>
+						<xs:enumeration value="50"/>
+						<xs:enumeration value="60"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="standortcode" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="\d{3}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="berufstaetigkeitcode" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:group ref="StudLehrgangMeldungFH"/>
+			<xs:element name="mobilitaet" type="mobilitaetFH" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Nicht zulässig, wenn disloziert=J</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="gemeinsam" type="gemeinsamTyp" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Nicht zulässig, wenn disloziert=J</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="bmwfwfoerderrelevant" type="JaNeinStr" minOccurs="1"/>
+			<xs:element name="vornachperskz" type="perskzTyp" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="disloziert" type="JaNeinStr" use="optional" default="N"/>
+	</xs:complexType>
+	<xs:group name="StudLehrgangMeldungFH">
+		<xs:annotation>
+			<xs:documentation>Meldung von Studien oder Lehrgängen gemäß Fachhochschulgesetz.
+				Konkrete Implementierungen dieses abstrakten Typs sind entweder
+				'StudiumMeldungFH' oder 'LehrgangMeldungFH'.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="perskz" type="perskzTyp"/>
+			<xs:element name="studstatuscode" minOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0"/>
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="2"/>
+						<xs:enumeration value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="zulassungsdatum" type="xs:date" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="beendigungsdatum" type="xs:date" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="zugangsberechtigung" type="zugangsberechtigung" minOccurs="1"/>
+			<xs:element name="zugangsberechtigungMA" type="zugangsberechtigung" minOccurs="0"/>
+		</xs:sequence>
+	</xs:group>
+	<xs:simpleType name="perskzTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{10}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="meldestatusTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[ IUA]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="gemeinsamTyp">
+		<xs:sequence>
+			<xs:element name="mobilitaetprogrammcode" type="xs:string" minOccurs="0"/>
+			<xs:element name="programmnr">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="studtyp" type="xs:string"/>
+			<xs:element name="partnercode" type="xs:integer"/>
+			<xs:element name="ausbildungssemester" type="xs:integer"/>
+			<xs:element name="studstatuscode" type="xs:integer"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="studienkennungTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{7}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="studium">
+		<xs:complexContent>
+			<xs:extension base="StudiumMeldung">
+				<xs:sequence>
+					<xs:element name="abschluesse" type="abschluesse" minOccurs="0"/>
+					<xs:element name="pruefungen" type="pruefungen" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studienkennung">
+		<xs:sequence>
+			<xs:element name="studiengesetz" type="studiengesetzTyp"/>
+			<xs:element name="bezulassung" type="beKennzeichen"/>
+			<xs:element name="skz1" type="studienkennzahl">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">UNI/PH: Kopfcode oder
+						einfache Studienkennung, FH: Erste Ziffer der FH-Studienkennung
+						mit "00" vorangestellt (dzt. entweder "000" oder "009").
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="skz2" type="studienkennzahl" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">UNI/PH: KZ2 (Element
+						entfällt, falls Studienbild nur KZ1 hat), FH: Ziffer 2-4 der
+						FH-Studienkennung.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="skz3" type="studienkennzahl" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">UNI/PH: KZ3, falls
+						vorhanden (ansonsten entfällt das ELement), FH: Element entfällt
+						grundsätzlich.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="bezwei" type="beVerbundKennzeichen" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entfällt grundsätzlich bei FH</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<!-- nicht von studienkennzahlen abgeleitet, da sonst die Feldreihenfolge 
+			nicht passt! -->
+	</xs:complexType>
+	<xs:complexType name="studienkennzahlen">
+		<xs:sequence>
+			<xs:element name="skz1" type="studienkennzahl"/>
+			<xs:element name="skz2" type="studienkennzahl" minOccurs="0"/>
+			<xs:element name="skz3" type="studienkennzahl" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="studienplan">
+		<xs:sequence>
+			<xs:element name="fach1" type="semesterTyp"/>
+			<xs:element name="fach2" type="semesterTyp" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="studiengesetzTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[AUHL]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="studienkennzahl">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="beKennzeichen">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[UPFR][A-Za-z]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="beVerbundKennzeichen">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Wa-z1-9]|[UPFR][A-Wa-z]|0[1-9]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="zugangsberechtigungTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="^[0-9]{2}$|^ {0,2}$"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="zugangsberechtigung">
+		<xs:sequence>
+			<xs:element name="voraussetzung" type="zugangsberechtigungTyp"/>
+			<xs:element name="datum" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entfällt, falls "voraussetzung" besagt, dass
+						keine allgemeine Uni-Reife zur Zulassung notwendig ist.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="staat" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Entfällt, falls "voraussetzung" besagt, dass
+						keine allgemeine Uni-Reife zur Zulassung notwendig ist.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="mobilitaet">
+		<xs:sequence>
+			<xs:element name="programm" type="xs:string"/>
+			<xs:element name="staat" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="mobilitaetVonBis">
+		<xs:complexContent>
+			<xs:extension base="mobilitaet">
+				<xs:sequence>
+					<xs:element name="von" type="xs:date"/>
+					<xs:element name="bis" type="xs:date" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="mobilitaetFH">
+		<xs:complexContent>
+			<xs:extension base="mobilitaetVonBis">
+				<xs:sequence>
+					<xs:element name="zweck" type="mobiZweckTyp"/>
+					<xs:element name="ectserworben" minOccurs="0" maxOccurs="1">
+						<xs:simpleType>
+							<xs:restriction base="xs:integer">
+								<xs:minInclusive value="0"/>
+								<xs:maxInclusive value="120"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="ectsangerechnet" minOccurs="0" maxOccurs="1">
+						<xs:simpleType>
+							<xs:restriction base="xs:integer">
+								<xs:minInclusive value="0"/>
+								<xs:maxInclusive value="120"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="aufenthaltfoerderungcode" minOccurs="0" maxOccurs="5">
+						<xs:simpleType>
+							<xs:restriction base="xs:integer">
+								<xs:enumeration value="1"/>
+								<xs:enumeration value="2"/>
+								<xs:enumeration value="3"/>
+								<xs:enumeration value="4"/>
+								<xs:enumeration value="5"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="abschluesse">
+		<xs:sequence>
+			<xs:element name="abschluss" type="abschluss" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="abschluss">
+		<xs:sequence>
+			<xs:element name="abschlussart" type="studienabschnitt" minOccurs="0"/>
+			<xs:element name="fach" type="studienfach"/>
+			<xs:element name="abschlussdatum" type="xs:date" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="studienabschnitt">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[RWSPU ]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="studienfach">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="mobiZweckTyp">
+		<xs:restriction base="xs:integer">
+			<xs:pattern value="[12345]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- bPK Abfrage (Satzart 72) -->
+	<xs:complexType name="BPKAntwortSatz">
+		<xs:complexContent>
+			<xs:extension base="datensatz"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BPKAntwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="be" type="xs:string"/>
+					<xs:element name="semester" type="xs:string"/>
+					<xs:element name="datenstand" type="xs:string"/>
+					<!-- Datum yyyy-MM-dd -->
+					<xs:element name="bpk" type="BPKAntwortSatz" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Kennzahlen (Satzart 99) -->
+	<xs:complexType name="kennzahlTyp">
+		<xs:sequence>
+			<xs:element name="bezeichnung" type="xs:string"/>
+			<xs:element name="wert" type="xs:decimal"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string"/>
+		<xs:attribute name="unistev-kuerzel" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="kennzahlenliste">
+		<xs:sequence>
+			<xs:element name="kennzahl" type="kennzahlTyp" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="be" type="beTyp"/>
+		<xs:attribute name="semester" type="semesterTyp"/>
+		<xs:attribute name="studienjahr" type="xs:string"/>
+		<xs:attribute name="datenstand" type="xs:string"/>
+		<!-- Datum yyyyMMdd -->
+	</xs:complexType>
+	<xs:complexType name="kennzahlenantwort">
+		<xs:sequence>
+			<xs:element name="uuid" type="xs:string"/>
+			<xs:element name="fehlerliste" type="fehlerliste"/>
+			<xs:element name="kennzahlenliste" type="kennzahlenliste"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="trimmedStr">
+		<xs:restriction base="xs:string">
+			<xs:whiteSpace value="collapse"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- FH & PH Integration -->
+	<xs:element name="matrikel-clearing-meldung" type="matrikel-clearing-meldung"/>
+	<xs:element name="matrikel-clearing-antwort" type="matrikel-clearing-antwort"/>
+	<xs:complexType name="matrikel-clearing-meldung">
+		<xs:sequence>
+			<xs:element name="uuid" type="uuidTyp"/>
+			<xs:element name="meldeuni" type="uniTyp"/>
+			<xs:element name="meldedatum" type="xs:date"/>
+			<xs:element name="studierende" type="personliste"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="matrikel-clearing-antwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="meldeuni" type="uniTyp"/>
+					<xs:element name="meldedatum" type="xs:date"/>
+					<xs:element name="studierende" type="personliste"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="uniTyp">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+			<xs:pattern value="[UPFR][A-Z]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="plzTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[ -~]{1,8}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="clearingAdresse">
+		<xs:sequence>
+			<xs:element name="staat">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="plz">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="16"/>
+						<xs:pattern value="[0-9,A-Z]{1,16}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ort">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="3"/>
+						<xs:maxLength value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="strasse">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="3"/>
+						<xs:maxLength value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="svnrTyp">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="10"/>
+			<xs:maxLength value="10"/>
+			<xs:pattern value="\d{10}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="phPersonId">
+		<xs:sequence>
+			<xs:element name="bpk" type="bpkTyp"/>
+			<xs:element name="personenkennzeichen" type="xs:string"/>
+			<xs:element name="matrikelnummer" type="MatrikelnummerTyp"/>
+			<xs:group ref="svnrOrEkz" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="svnrOrEkz">
+		<xs:choice>
+			<xs:element name="svnr" type="svnrTyp"/>
+			<xs:element name="ekz" type="trimmedStr"/>
+		</xs:choice>
+	</xs:group>
+	<!--<xs:simpleType name="geschlechtTyp"> <xs:restriction base="xs:string"> 
+		<xs:enumeration value="M"/> <xs:enumeration value="W"/> <xs:enumeration value="X"/> 
+		</xs:restriction> </xs:simpleType> -->
+	<xs:complexType name="person">
+		<xs:sequence>
+			<xs:element name="personId" type="phPersonId"/>
+			<xs:element name="vorname">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="nachname">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="255"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="gebDatum" type="xs:date"/>
+			<xs:element name="geschlecht" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[MWXmwx]"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="zustelladresse" type="clearingAdresse"/>
+			<xs:element name="heimatadresse" type="clearingAdresse"/>
+			<xs:element name="studstatuscode" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[12345]"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="personliste">
+		<xs:sequence>
+			<xs:element name="personen" type="person" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- EKZ Anforderung -->
+	<xs:element name="ekzUseCase">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="ekzAnforderung" type="ekzAnforderung" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="ekzForcierung" type="ekzForcierung" minOccurs="0" maxOccurs="unbounded"/>
+				<!-- Add neue Use Cases falls notwendig -->
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ekzAnforderung">
+		<xs:sequence>
+			<xs:element name="ekzBasis" type="ekzBasisdaten"/>
+			<xs:element name="ekz" type="trimmedStr"/>
+			<xs:element name="kandidaten" type="kandidaten"/>
+			<xs:element name="returncode" type="xs:string"/>
+			<xs:element name="returntext" type="returntext"/>
+			<xs:element name="forcierungskey" type="xs:string" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ekzForcierung">
+		<xs:sequence>
+			<xs:element name="forcierungskey" type="xs:string"/>
+			<xs:element name="ekzBasis" type="ekzBasisdaten"/>
+			<xs:element name="ekz" type="trimmedStr"/>
+			<xs:element name="returncode" type="xs:string"/>
+			<xs:element name="returntext" type="returntext"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ekzBasisdaten">
+		<xs:sequence>
+			<xs:element name="vorname">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="80"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="nachname">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="80"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="geschlecht" type="geschlechtTyp"/>
+			<!--<xs:element name="geschlecht"> <xs:simpleType> <xs:restriction base="xs:string"> 
+				<xs:pattern value="[MWX]"/> </xs:restriction> </xs:simpleType> </xs:element> -->
+			<xs:element name="gebDatum" type="xs:date"/>
+			<!-- <xs:simpleType> -->
+			<!-- <xs:restriction base="xs:date"> -->
+			<!-- <xs:minInclusive value="1880-01-01" /> -->
+			<!-- </xs:restriction> -->
+			<!-- </xs:simpleType> -->
+			<!-- </xs:element> -->
+			<xs:element name="svnr" type="trimmedStr"/>
+			<xs:element name="adresse" type="clearingAdresse"/>
+			<xs:element name="requestTimestamp" type="xs:dateTime" minOccurs="0"/>
+			<xs:element name="orgKey" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="kandidaten">
+		<xs:sequence>
+			<xs:element name="kandidat" type="kandidat" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="kandidat">
+		<xs:sequence>
+			<xs:element name="ekzBasisdaten" type="ekzBasisdaten"/>
+			<xs:element name="ekz" type="trimmedStr"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="returntext">
+		<xs:sequence>
+			<xs:element name="text" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ekzAntwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:choice>
+						<xs:element name="ekzAnforderung" type="ekzAnforderung" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="ekzForcierung" type="ekzForcierung" minOccurs="0" maxOccurs="unbounded"/>
+						<!-- Add neue Use Cases falls notwendig -->
+					</xs:choice>
+					<xs:element name="rueckgabewert" type="rueckgabewert"/>
+					<xs:element name="responseTimestamp">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:pattern value="\d{4}-\d{2}-\d{2}[T -]\d{2}:\d{2}:\d{2}([,]\d{1,9})?([+-]\d{2}([:][0-5]\d)?)?"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="rueckgabewert">
+		<xs:sequence>
+			<xs:element name="responsecode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="responsetext" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="simpleBpkResponse">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="personenkennzeichen" type="xs:string" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation xml:lang="de">Element
+							'personenkennzeichen' ist veraltet und wird in der nächsten
+							API-Version entfernt. Bitte ausschließlich Element 'bpk'
+							verwenden!!!				</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="bpk" type="bpkTyp" minOccurs="0"/>
+			</xs:choice>
+			<xs:element name="personInfo" type="simplePersonInfo" minOccurs="0" maxOccurs="5"/>
+			<xs:element name="fehlerAntwort" type="FehlerAntwort" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="simplePersonInfo">
+		<xs:sequence>
+			<xs:element name="person" type="simplePhysicalPerson"/>
+			<xs:element name="adresse" type="clearingAdresse"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="simplePhysicalPerson">
+		<xs:sequence>
+			<xs:element name="identification" type="identification" minOccurs="0"/>
+			<xs:element name="akadGradPre" type="xs:string" minOccurs="0"/>
+			<xs:element name="vorname" type="xs:string"/>
+			<xs:element name="nachname" type="xs:string"/>
+			<xs:element name="akadGradPost" type="xs:string" minOccurs="0"/>
+			<xs:element name="alternativname" type="xs:string" minOccurs="0"/>
+			<!-- <xs:element name="geschlecht" type="xs:string" minOccurs="0"/> -->
+			<xs:element name="geschlecht" type="geschlechtTyp" minOccurs="0"/>
+			<xs:element name="gebdat" type="xs:string" minOccurs="0"/>
+			<xs:element name="gebland" type="xs:string" minOccurs="0"/>
+			<xs:element name="staat" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="identification">
+		<xs:sequence>
+			<xs:element name="value" type="xs:string" minOccurs="0"/>
+			<xs:element name="type" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Zulassungsantrag -->
+	<xs:complexType name="zulassungsantragAnfrage">
+		<xs:complexContent>
+			<xs:extension base="uniSemesterAnfrage">
+				<xs:sequence>
+					<xs:element name="studierende" type="studentInfoMitbelegung" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="vorschreibung" type="vorschreibung" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="zulassungsantragAntwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Stammdaten Massenübermittlung -->
+	<xs:complexType name="stammdatenblockAnfrage">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="be" type="beTyp" minOccurs="1"/>
+					<xs:element name="semester" type="semesterTyp" minOccurs="1"/>
+					<xs:element name="student" type="studentBlockAnfrage" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studentBlockAnfrage">
+		<xs:sequence>
+			<xs:element name="matrikelnummer" type="MatrikelnummerTyp"/>
+			<xs:element name="stammdaten" type="studentInfo" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="vorschreibung" type="vorschreibung" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="stammdatenblockAntwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="be" type="beTyp" minOccurs="1"/>
+					<xs:element name="semester" type="semesterTyp" minOccurs="1"/>
+					<xs:element name="datenstand" type="xs:date" minOccurs="1"/>
+					<xs:element name="student" type="StudentStudiumInfo" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentStudiumInfo">
+		<xs:complexContent>
+			<xs:extension base="studentBlockAnfrage">
+				<xs:sequence>
+					<xs:element name="datenstand" type="xs:date" minOccurs="1"/>
+					<xs:element name="bezahlt" type="KontostandBasis" minOccurs="0"/>
+					<xs:element name="studien" type="StudienDaten" minOccurs="0"/>
+					<xs:element name="studiumpruefungen" type="studiumpruefungen" minOccurs="0"/>
+					<xs:element name="studiumabschluesse" type="studiumabschluesse" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- Stammdaten melden -->
+	<xs:element name="stammdatenanfrage">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="uniStudentAnfrage">
+					<xs:sequence>
+						<xs:element name="stammdaten" type="studentInfo" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="vorschreibung" type="vorschreibung" minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="stammdatenAntwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="vorschreibung">
+		<xs:sequence>
+			<xs:element name="oehbeitrag">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:maxInclusive value="9999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sonderbeitrag">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:maxInclusive value="9999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="studienbeitrag">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:maxInclusive value="99999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="studiengebuehr" default="0" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:maxInclusive value="9999999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="valutadatum">
+				<xs:simpleType>
+					<xs:restriction base="xs:date">
+						<xs:maxInclusive value="2099-09-01"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="studienbeitragnachfrist">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:maxInclusive value="99999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="studiengebuehrnachfrist" default="0" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:unsignedInt">
+						<xs:maxInclusive value="9999999"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="valutadatumnachfrist">
+				<xs:simpleType>
+					<xs:restriction base="xs:date">
+						<xs:maxInclusive value="2099-09-01"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Zahlung melden -->
+	<xs:complexType name="zahlungsanfrage">
+		<xs:complexContent>
+			<xs:extension base="uniStudentAnfrage">
+				<xs:sequence>
+					<xs:element name="zahlungsart" type="xs:int"/>
+					<xs:element name="betrag" type="xs:unsignedInt"/>
+					<xs:element name="buchungsdatum" type="xs:date"/>
+					<xs:element name="referenznummer" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="KontostandBasis">
+		<xs:sequence>
+			<xs:element name="bezahlstatus" type="bezahlstatus" minOccurs="1"/>
+			<xs:element name="kontostand" type="xs:int" minOccurs="1"/>
+			<xs:element name="buchungsdatum" type="xs:date" minOccurs="0"/>
+			<xs:element name="buchungsbe" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Kontostand">
+		<xs:complexContent>
+			<xs:extension base="KontostandBasis">
+				<xs:sequence>
+					<xs:element name="studierendenkey" type="Studierendenkey" minOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="kontostandantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="kontostandliste" type="KontostandListe"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="KontostandListe">
+		<xs:sequence>
+			<xs:element name="kontostand" type="Kontostand" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="bezahlstatus">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="8"/>
+			<xs:enumeration value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="studierendefehlerantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="studierendefehlerlisten" type="studierendefehlerlisten" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studierendefehlerlisten">
+		<xs:sequence>
+			<xs:element name="studierendefehlerliste" type="studierendefehlerliste" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="studierendefehlerliste">
+		<xs:sequence>
+			<xs:element name="studierendenkey" type="Studierendenkey"/>
+			<xs:element name="fehlerliste" type="fehlerliste"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ************************************** PRUEFUNGSAKTIVITAETEN ****************************************************************************************************************************** -->
+	<xs:complexType name="pruefungsaktivitaetenanfrage">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="studiumpruefungen" type="studiumpruefungen"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studiumpruefungen">
+		<xs:sequence>
+			<xs:element name="studiumpruefung" type="studiumpruefung" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="studiumpruefung">
+		<xs:sequence>
+			<xs:annotation>
+				<xs:documentation>Prüfungsaktivität enthält KEINE persid, da zu
+					diesem Zeitpunkt Matrikelnummer+Persid in BIS bereits bekannt sind.
+					BIS muss aus BE+Matrikel+Studium die persid selbst ermitteln.
+				</xs:documentation>
+			</xs:annotation>
+			<xs:element name="studierendenkey" type="Studierendenkey"/>
+			<xs:choice minOccurs="1">
+				<xs:element name="studienkennung" type="studienkennung">
+					<xs:annotation>
+						<xs:documentation>UNI/PH verwenden "studienkennung".
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="studiengang" type="studienkennungTyp">
+					<xs:annotation>
+						<xs:documentation>FH verwenden "studiengang".</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="pruefungen" type="pruefungen"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pruefungen">
+		<xs:sequence>
+			<xs:element name="pruefung" type="pruefung" minOccurs="1" maxOccurs="2"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pruefung">
+		<xs:sequence>
+			<xs:element name="fach" type="studienfach" default="1">
+				<xs:annotation>
+					<xs:documentation>Bei FH Default=1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="semesterzahl" type="xs:int" default="1">
+				<xs:annotation>
+					<xs:documentation>Bei FH Default=1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="semesterstunden" type="xs:int" default="0">
+				<xs:annotation>
+					<xs:documentation>Bei FH Default=0</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="semesterstundenpositiv" type="xs:int" default="0">
+				<xs:annotation>
+					<xs:documentation>Bei FH Default=0</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ects" minOccurs="1" maxOccurs="2">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:int">
+							<xs:attribute name="bezug" use="optional" default="gesamt">
+								<xs:annotation>
+									<xs:documentation>FH notieren je ein Element mit "erworben" und
+										"angerechnet". Bei UNI/PH entfällt das Attribut.
+									</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="gesamt"/>
+										<xs:enumeration value="erworben"/>
+										<xs:enumeration value="angerechnet"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="pruefungsaktivitaetenantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="studiumpruefungen" type="studiumpruefungen" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ************************************** MATRIKELKORREKTURANFRAGE ****************************************************************************************************************************** -->
+	<xs:complexType name="matrikelkorrekturanfrage">
+		<xs:complexContent>
+			<xs:extension base="uniStudentAnfrage">
+				<xs:sequence>
+					<xs:element name="matrikelalt" type="MatrikelnummerTyp"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="matrikelkorrekturantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ************************************** STUDIENANFRAGE ****************************************************************************************************************************** -->
+<!-- 	<xs:element name="studienanfrage"> -->
+		<xs:complexType  name="studienanfrage">
+			<xs:complexContent>
+				<xs:extension base="uniStudentAnfrage">
+					<xs:sequence>
+						<xs:element name="studien" type="StudienDaten" minOccurs="1"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+<!-- 	</xs:element> -->
+	<xs:complexType name="studienloeschanfrage">
+		<xs:complexContent>
+			<xs:extension base="uniStudentAnfrage">
+				<xs:sequence>
+					<xs:element name="studienkennung" type="studienkennung" minOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studienloeschantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort"/>
+		</xs:complexContent>
+	</xs:complexType>
+<!-- 	<xs:element name="studienantwort"> -->
+		<xs:complexType name="studienantwort">
+			<xs:complexContent>
+				<xs:extension base="abstractAntwort">
+					<xs:sequence>
+						<xs:element name="studienliste" type="studienliste" minOccurs="0"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+<!-- 	</xs:element> -->
+	<xs:complexType name="matrikelpruefungantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="matrikelpruefergebnis" type="Matrikelpruefergebnis"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Matrikelpruefergebnis">
+		<xs:sequence>
+			<xs:element name="statuscode" type="xs:int"/>
+			<xs:element name="statusmeldung" type="xs:string"/>
+			<xs:element name="matrikelliste" type="MatrikelListe"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MatrikelListe">
+		<xs:sequence>
+			<xs:element name="extendedstudierendenkey" type="ExtendedStudierendenKey" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ExtendedStudierendenKey">
+		<xs:sequence>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="matrikel" type="MatrikelnummerTyp" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation xml:lang="de">Element 'matrikel' ist
+							veraltet und wird in der nächsten API-Version entfernt. Bitte
+							ausschließlich Element 'matrikelnummer' verwenden!!!
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="matrikelnummer" type="MatrikelnummerTyp" minOccurs="0"/>
+			</xs:choice>
+			<xs:element name="be" type="beTyp" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="semester" type="semesterTyp" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="matrikelstatus" type="Matrikelstatus" minOccurs="1"/>
+			<xs:element name="fullstudentlink" type="xs:string" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="Matrikelstatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ungueltig"/>
+			<xs:enumeration value="gueltig"/>
+			<xs:enumeration value="reservierbar"/>
+			<xs:enumeration value="reserviert"/>
+			<xs:enumeration value="zugeordnet"/>
+			<xs:enumeration value="vergeben"/>
+			<xs:enumeration value="storniert"/>
+			<xs:enumeration value="rechtskraeftig"/>
+			<xs:enumeration value="gesperrt"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="fullstudentantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="unistudentinfos" type="UniStudentInfos" minOccurs="0"/>
+					<xs:element name="gesamtstudentinfos" type="GesamtStudentInfos" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UniStudentInfos">
+		<xs:sequence>
+			<xs:element name="unistudentinfo" type="FullStudentInfo" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GesamtStudentInfos">
+		<xs:sequence>
+			<xs:element name="gesamtstudentinfo" type="GesamtStudentInfo" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ************************************** ABSCHLÜSSE ****************************************************************************************************************************** -->
+	<xs:complexType name="abschlussantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="studiumabschluesse" type="studiumabschluesse" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="abschlussanfrage">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="studiumabschluesse" type="studiumabschluesse"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studiumabschluesse">
+		<xs:sequence>
+			<xs:element name="studiumabschluss" type="studiumabschluss" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="studiumabschluss">
+		<xs:sequence>
+			<xs:element name="studienkennung" type="studienkennung"/>
+			<xs:element name="studierendenkey" type="Studierendenkey"/>
+			<xs:element name="abschluesse" type="abschluesse"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ************************************** NACHWEISE ****************************************************************************************************************************** -->
+	<xs:complexType name="NachweisAntwortListe">
+		<xs:complexContent>
+			<xs:extension base="nachweisliste">
+				<xs:sequence>
+					<xs:element name="uuid" type="uuidTyp"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="NachweisAntwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="nachweisliste">
+		<xs:sequence>
+			<xs:element name="nachweis" type="nachweis" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="NachweisAnfrage">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="nachweis" type="nachweis"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="nachweis">
+		<xs:sequence>
+			<xs:element name="studierendenkey" type="Studierendenkey"/>
+			<xs:element name="code" type="beitragsStatusTyp"/>
+			<xs:element name="dauer" type="dauerType"/>
+			<xs:element name="einbringung" type="xs:date" minOccurs="0"/>
+			<xs:element name="gueltig" type="gueltigTyp" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="dauerType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="99"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="beitragsStatusTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[FHNRTVZ]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="gueltigTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[JNjn]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="refundBetragTyp">
+		<xs:annotation>
+			<xs:documentation>Reundierungbetrag in Cent als ganze Zahl.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:unsignedInt">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="99999"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="refundierungsanfrage">
+		<xs:complexContent>
+			<xs:extension base="uniStudentAnfrage">
+				<xs:sequence>
+					<xs:element name="refundierungsbetrag" type="refundBetragTyp" minOccurs="1"/>
+					<xs:element name="bearbeitungsname" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="refundierungsantwort">
+		<xs:complexContent>
+			<xs:extension base="abstractAntwort">
+				<xs:sequence>
+					<xs:element name="refundierungsmeldung" type="refundierungsmeldung" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="refundierungsmeldung">
+		<xs:sequence>
+			<xs:element name="studierendenkey" type="Studierendenkey" minOccurs="1"/>
+			<xs:element name="refundierungsart" type="refundierungsartTyp" minOccurs="1"/>
+			<xs:element name="refundierungsbetrag" type="refundBetragTyp" minOccurs="1"/>
+			<xs:element name="durchfuerungsdatum" type="xs:date" minOccurs="1"/>
+			<xs:element name="refundierungsbe" type="uniTyp" minOccurs="1"/>
+			<xs:element name="verfahrensstatus" type="xs:string" minOccurs="1"/>
+			<xs:element name="bearbeitungsname" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="refundierungsartTyp" final="restriction">
+		<xs:restriction base="xs:int">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Zahlungsrelevante Refundierung mit
+						Beitragsabsenkung
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Refundierung ohne Beitragsabsenkung
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="studentInfoHuelle" abstract="true"/>
+	<xs:complexType name="studentInfoMinimal">
+		<xs:complexContent>
+			<xs:extension base="studentInfoHuelle">
+				<xs:sequence>
+					<xs:element name="vorname" type="xs:string" minOccurs="1"/>
+					<xs:element name="nachname" type="xs:string" minOccurs="1"/>
+					<xs:element name="geburtsdatum" type="xs:date" minOccurs="1"/>
+					<xs:element name="geschlecht" type="geschlechtTyp" minOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studentInfoBasis">
+		<xs:complexContent>
+			<xs:extension base="studentInfoMinimal">
+				<xs:sequence>
+					<xs:element name="staatsbuergerschaft" type="xs:string" minOccurs="0"/>
+					<xs:element name="akadgrad" type="xs:string" minOccurs="0"/>
+					<xs:element name="akadnach" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studentInfoExtended">
+		<xs:complexContent>
+			<xs:extension base="studentInfoBasis">
+				<xs:sequence>
+					<xs:element name="bpk" type="bpkTyp" minOccurs="0"/>
+					<xs:group ref="svnrOrEkz" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+		<!-- blöder name -->
+	</xs:complexType>
+	<xs:simpleType name="bpkTyp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([A-Za-z0-9+/]{27})="/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="studentInfoBasisAdressen">
+		<xs:complexContent>
+			<xs:extension base="studentInfoExtended">
+				<xs:sequence>
+					<xs:element name="adressen" type="adressenListe"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GesamtStudentInfo">
+		<xs:complexContent>
+			<xs:extension base="studentInfoExtended">
+				<xs:sequence>
+					<xs:element name="matrikelnummer" type="MatrikelnummerTyp" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="matrikelstatus" type="Matrikelstatus" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="maturadatum" type="xs:date" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UniStudentInfo">
+		<xs:complexContent>
+			<xs:extension base="studentInfoBasisAdressen">
+				<xs:sequence>
+					<xs:element name="studierendenkey" type="Studierendenkey" minOccurs="1" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Stammdaten">
+		<xs:annotation>
+			<xs:documentation>Reiner Alias für UniStudentInfo zur besseren
+				Verständlichkeit.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="UniStudentInfo"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FullStudentInfo">
+		<xs:complexContent>
+			<xs:extension base="UniStudentInfo">
+				<xs:sequence>
+					<xs:element name="studienliste" type="studienliste"/>
+					<xs:element name="studienbeitrag" type="KontostandUniInfo"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="KontostandUniInfo">
+		<xs:complexContent>
+			<xs:extension base="Kontostand">
+				<xs:sequence>
+					<xs:element name="statusbefreit" type="xs:int"/>
+					<xs:element name="vorschreibung" type="vorschreibung"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+		<!-- blöder name! -->
+	</xs:complexType>
+	<xs:complexType name="StudentInfoKonto">
+		<xs:complexContent>
+			<xs:extension base="studentInfoHuelle">
+				<xs:sequence>
+					<xs:element name="studienbeitrag" type="KontostandUniInfo"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentInfoBla">
+		<xs:complexContent>
+			<xs:extension base="GesamtStudentInfo">
+				<xs:sequence>
+					<xs:element name="studienbeitrag" type="KontostandUniInfo"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentInfoBPK">
+		<xs:complexContent>
+			<xs:extension base="studentInfoBasis">
+				<xs:sequence>
+					<xs:element name="geburtsland" type="xs:string" minOccurs="0"/>
+					<xs:element name="alternativname" type="xs:string" minOccurs="0"/>
+					<xs:element name="adresse" type="adresse" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StudentInfoEkz">
+		<xs:complexContent>
+			<xs:extension base="studentInfoMinimal">
+				<xs:sequence>
+					<xs:element name="svnr" type="xs:string" minOccurs="0"/>
+					<xs:element name="adresse" type="adresse" minOccurs="1"/>
+					<xs:element name="requestTimestamp" type="xs:date" minOccurs="0"/>
+					<xs:element name="orgKey" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studienberechtigunganfrage">
+		<xs:complexContent>
+			<xs:extension base="abstractAnfrage">
+				<xs:sequence>
+					<xs:element name="be" type="beTyp"/>
+					<xs:element name="studienberechtigungliste" type="studienberechtigungliste"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studienberechtigungliste">
+		<xs:sequence>
+			<xs:element name="studienberechtigung" type="studienberechtigung" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="studienberechtigung">
+		<xs:complexContent>
+			<xs:extension base="studienkennzahlen">
+				<xs:sequence>
+					<xs:element name="matrikelnummer" type="MatrikelnummerTyp"/>
+					<xs:element name="fallnr" type="xs:int"/>
+					<xs:group ref="svnrOrEkz" minOccurs="0"/>
+					<xs:element name="geburtsdatum" type="xs:date"/>
+					<xs:element name="geschlecht" type="geschlechtTyp"/>
+					<xs:element name="staatsbuergerschaft" type="staatTyp"/>
+					<xs:element name="zulassungsdatum" type="xs:date"/>
+					<xs:element name="pruefungsdatum" type="xs:date" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="studienberechtigungantwort">
+		<xs:sequence>
+			<xs:element name="uuid" type="uuidTyp"/>
+			<xs:element name="studierendefehlerlisten" type="studierendefehlerlisten"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="staatTyp">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="3"/>
+			<xs:pattern value="[A-Z]{1,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="batch2restanfragen">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="be" type="beTyp" minOccurs="1"/>
+				<xs:element name="datenstand" type="xs:date" minOccurs="1"/>
+				<xs:element name="batch2restanfrage" type="batch2restanfrage" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="batch2restanfrage">
+		<xs:sequence>
+			<xs:element name="dispatchKey" type="xs:string" minOccurs="0"/>
+			<xs:element name="abstractanfrage" type="abstractAnfrage" minOccurs="0"/>
+			<xs:element name="link" type="xs:string"/>
+			<xs:element name="httpmethod" type="xs:string"/>
+			<xs:element name="abstractantwort" type="abstractAntwort" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

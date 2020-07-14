@@ -1,0 +1,2713 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:annox="http://annox.dev.java.net" xmlns:ci="http://jaxb.dev.java.net/plugin/code-injector"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd" version="2.1">
+
+	<!-- Annotate the following classes with XmlRootElement -->
+	<jaxb:bindings schemaLocation="datenverbund-jobs-0.5.xsd">
+		<jaxb:globalBindings choiceContentProperty="true">
+			<xjc:serializable uid="1" /> <!-- automatisch Serializable -->
+			<jaxb:javaType xmlType="xs:integer" name="java.lang.Integer"/>
+			<!--  vielleicht spaeter  jaxb:javaType xmlType="xs:date" name="java.util.Date" / -->
+		</jaxb:globalBindings>
+		
+ 		<jaxb:schemaBindings>
+			<jaxb:package name="at.gv.brz.rg.stubei.rws.schema">
+			<!-- INFO:
+				Erzeugt ein package.html. Der jxc generiert allerdings auch ein package-info.html,
+				das aus diversen Files generiert wierd (z.B. kommt das elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED
+				vom elementFormDefault="qualified" im datenverbund-jobs.xsd und das namespace = "http://www.brz.gv.at/datenverbund-unis"
+				vom ebendortigen targetNamespace.
+				Weitere Features siehe http://seanshou.blogspot.com/2013/04/practice-of-customize-jaxb-schema-2.html.
+				Der Package-Name kommt von hier, er kann aber auch im stb-rest-client/pom.xml angegeben sein.
+			 -->
+				<jaxb:javadoc><![CDATA[
+<body><h3>Model-Klassen zu den REST-Webservices.</h3>
+<o>Diese Klassen werden automatisch aus dem <tt>datenverbund-jobs-{version}.xsd</tt> mittels
+JAXB generiert. Siehe dazu die entsprechenden Eintragungen zum <tt>maven-jaxb2-plugin</tt>
+im <tt>stb-rest/pom.xml</tt>. <strong>Keinesfalls</strong> d&uuml;rfen Klassen in diesem
+Package h&auml;ndisch ver&auml;ndert werden. Kommentare und Annotations werden grunds&auml;tzlich
+<em>NICHT</em> im <tt>datenvrebund-jobs-0.1.xsd</tt>, sondern im <tt>datenverbund.xjb</tt>-File
+eingetragen, da ersteres auch an Schnittstellenpartner weitergegeben wird und keine XJB-Extensions
+(z.B. annox) enthalten darf. Informationen zum Schema-Binding findet ihr
+<a href="https://docs.oracle.com/cd/E17802_01/webservices/webservices/docs/1.5/tutorial/doc/JAXBUsing4.html">hier</a>.</p>
+</body>
+					]]>
+				</jaxb:javadoc>
+			</jaxb:package>
+		</jaxb:schemaBindings>
+		
+		<jaxb:bindings node="//xs:complexType[@name='fehlerliste']//xs:attribute[@name='fehleranzahl']">
+			<!-- TODO: Bei Gelegenheit auf java.lang.Integer umstellen -->
+			<!-- aber erst nach Ende der Batchverarbeitung, weil im .ser vorhanden! -->
+            <jaxb:property>
+                <jaxb:baseType >
+                    <jaxb:javaType name="java.math.BigInteger"/>
+                </jaxb:baseType>
+            </jaxb:property>
+   	    </jaxb:bindings>
+
+		<!-- AbstractAntwort -->
+		<jaxb:bindings node="xs:complexType[@name='abstractAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="AbstractAntwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="AbstractAntwort" description="Das Basis-Element für Antwort-XML." hidden="true" /><!--  subtypes="{Fehlerliste.class }"/> -->
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='abstractAntwort']//xs:element[@name='uuid']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="1" value="Transaktions-ID" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='abstractAntwort']//xs:element[@name='fehlerliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="2" value="Fehlerliste. Enthält bei der Anfrage auftretende Fehler. Falls kein Fehler auftritt, wird eine leere Liste zurückgegeben." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='MatrikelReservierenAnfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="matrikelnummernanfrage" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="matrikelnummernanfrage" description="Request zur Reservierung von Matrikelnummern bzw. Abfrage von reservierten Nummern."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='MatrikelReservierenAnfrage']//xs:element[@name='kontingentblock']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="true" value="Parameter zur Anforderung eines Matrikelnummernblockes mit Studienjahr, BE-Kennung und Blockgröße."/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='KontingentBlock']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="kontingentblock" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="kontingentblock" description="Parameter zur Anforderung eines Matrikelnummernblockes mit Studienjahr, BE-Kennung und Blockgröße."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='MatrikelMeldungAnfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="matrikelnummernmeldung" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="matrikelnummernmeldung" description="Request zur Reservierung von Matrikelnummern bzw. Abfrage von reservierten Nummern."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='PersonMeldungV2']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="personmeldung" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="personmeldung" description="Personendaten zur gemeldeten Matrikelnummer."/>
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='PersonMeldungV2']//xs:element[@name='matrikel']">
+			<annox:annotate>
+				<annox:annotate annox:class="java.lang.Deprecated"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='PersonMeldungV2']//xs:element[@name='matrikelnummer']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Matrikelnummer: achtstellig, nummerisch mit führenden Nullen (**ALTERNATIV ZU `matrikel`. Bis API-Version 0.5 `matrilel`, nach API-Verison 05 `matrikelnummer`. In API-Verison 0.5 ENTWEDER-ODER VERWENDEN!!**)" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='PersonMeldungV2']//xs:element[@name='gebdat']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Geburtsdatum der Person." required="true" example="1980-04-04"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='ErnpMeldungV2']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="ernpmeldung" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="ernpmeldung" description="Optionaler Datensatz. Falls der Datenverbund zu den Personendaten kein bPK (bereichsspezifisches Personenkennzeichen) ermitteln kann, wird mit diesen Daten eine Eintragung der Person im Ergänzungsregister für natürliche Personen (ERnP) angefordert. Dieses Feature sollte nur nach sorgfältiger Prüfung der Daten angefordert werden. Wenn die Person von sich aus eine aktuellen oder früheren Wohnsitz in Österreich angibt, bitte die Daten nochmals prüfen, da in diesem Fall sicher ein bPK vorhanden ist. Die ERnP-Eintragung ist auch außerhalb des Datenverbundes gültig. Fehlerhafte Eintragungen können der Person in späterer Folge Unnannehmlichkeiten bei diversen Behördenwegen verursachen."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='ErnpMeldungV2']//xs:element[@name='ausgabedatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="" required="true" example="1987-01-01"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='MatrikelnummernMeldungAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="matrikelnummernmeldungantwort" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="MatrikelnummernMeldungAntwort" description="Response bei der Meldung von Matrikelnummern."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='matrikelnummernantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="matrikelnummernantwort" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="matrikelnummernantwort" description="Response bei der Reservierung von Matrikelnummern."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='matrikelnummernantwort']//xs:element[@name='matrikelnummernliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" value="Liste der reservierten Matrikelnummern. Falls keine gefunden werden (z.B. im Fehlerfall), kann dieses Element entfallen." required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<!-- Fehlerliste & Fehler -->
+		<jaxb:bindings node="xs:complexType[@name='FehlerAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="FehlerAntwort" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="FehlerAntwort" description="Response-Objekt für Requests, die außer einer potentiellen Fehlermeldung keine anderen Daten zurückliefern."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='fehlerliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="Fehlerliste" description="Liste mit Fehlermeldungen."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehlerliste']//xs:element[@name='fehler']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="4" value="Liste der tatsächlich aufgetretenen Fehler. Falls kein Fehler auftritt, wird eine leere Liste übergeben." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehlerliste']//xs:attribute[@name='fehleranzahl']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" value="Anzahl der tatsächlich aufgetretenen Fehler." required="true" example="1" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='fehler']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="Fehler" description="Einzelnes Fehler-Element. **WICHTIG!** Die Elemente `datenfeld`, `quelle` und `fehlerquelle` werden alternativ genutzt. `datenfeld` wird verwendet, der Elementname das gewünschte Fehlerfeld eindeutig identifiziert (keine Listen oder Arrays). `quelle` wird verwendet, wenn Matrikelnummer+BEKennung+Semester (Studierendenkey) zur Identifikation ausreichen (Wird ab Version 0.6 durch Fehlerquelle ersetzt). Jetzt schon verwendbar und generell ab API-Version 0.6 zu verwenden ist 'fehlerquelle'. Die Fehlerquelle erweitert die 'quelle' um eine 'studienkennung' da in manchen Fällen anhand des 'studierendenkey' keine eindeutige Identifizierung stattfinden kann. Beispiele für den Einsatz von 'fehlerquelle' sind: 'stammdatenblock.xml', 'studien.xml', 'pruefungsaktivitaeten.xml', 'abschluesse.xml'"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehler']//xs:element[@name='fehlernummer']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" value="Code zur Spezifikation des Fehlers. Eine vollständige Liste der zulässigen Fehlercodes wird vom BMWFW bereitgestellt (Codex Fehlerliste)." required="true" example="WD00001" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehler']//xs:element[@name='kategorie']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="4" value="Fehlerkategorie gemäß BMWFW-Codex" required="true" example="W" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehler']//xs:element[@name='datenfeld']">
+			<annox:annotate>
+				<annox:annotate annox:class="java.lang.Deprecated"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="5" hidden="true" value="Betroffenes Datenfeld (XML Element oder Attribut). Ab API-Version 0.6 wird dieses Feld schrittweise durch das genauere Element 'fehlerquelle' ersetzt." required="false" example="generell" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehler']//xs:element[@name='feldinhalt']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="6" value="Aktueller (falscher) Wert des betroffenen Datenfeldes" required="false" example="Nur ein Beispiel ..." /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehler']//xs:element[@name='fehlertext']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="7" value="Detailinformation zum aufgetretenen Fehler." required="false" example="Falls möglich, steht hier eine detaillierte Beschreibung des Fehlers."/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehler']//xs:element[@name='massnahme']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="8" value="Vorgeschlagene Maßnahme zur Fehlerbehebung" required="false" example="Informationen zur Fehlerursache und Behebung."/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehler']//xs:element[@name='quelle']">
+			<annox:annotate>
+				<annox:annotate annox:class="java.lang.Deprecated"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="9" hidden="true" value="Optionales Element zur Angabe jenes Datensatzes, der den Fehler verursacht hat. In der überwiegenden Mehrzahl der Fälle ergeben sich Matrikelnummer,BE-Kennung und Semester direkt aus dem Request, so dass dieses Element redundant ist und daher entfällt. Bei der Meldung mehrerer Datensätzen zu verschiedenen Matrikelnummern ermöglicht das Element jedoch die exakte Zuordnung der Fehlermeldung. Ab API-Version 0.6 durch Element 'fehlerquelle' ersetzt." required="false"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehler']//xs:element[@name='fehlerquelle']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="10" value="Optionales Element zur Angabe jenes Datensatzes, der den Fehler verursacht hat. In der überwiegenden Mehrzahl der Fälle ergeben sich Matrikelnummer,BE-Kennung und Semester direkt aus dem Request, so dass dieses Element redundant ist und daher entfällt. Bei der Meldung mehrerer Datensätzen zu verschiedenen Matrikelnummern ermöglicht das Element jedoch die exakte Zuordnung der Fehlermeldung." required="false"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='fehlerquelle']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="fehlerquelle" description="Detailinformation zu jenem Element im Request, bei dem der Fehler aufgetreten ist."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehlerquelle']//xs:element[@name='studierendenkey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="1" value="Referenz auf die Grund- bzw. Stammdaten des/der Studierenden" required="true"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehlerquelle']//xs:element[@name='studiumkey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="2" value="Verweis auf eventuell betroffene Studiendaten." required="false"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='fehlerquelle']//xs:element[@name='datenfeld']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" value="Verweis auf ein spezielles Element (bei komplexen Datentypen, z.B. fach2 im studienplan-element)." required="false" example="studienplan.fach2"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<!-- MitbelegungAntwort -->
+		<jaxb:bindings node="xs:complexType[@name='mitbelegungAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="mitbelegerBatch" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="MitblegungAntwort" description="Informationen zur amtlichen Mitbelegung."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='mitbelegungAntwort']//xs:element[@name='be']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennzeichen der abzufragenden Bildungseinrichtung." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='mitbelegungAntwort']//xs:element[@name='semester']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Semesterkennzeichen (z.B. 17W oder 1017)" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='mitbelegungAntwort']//xs:element[@name='datenstand']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Tag der Datenermittlung (kann früher als der tatsächliche Abfragezeitpunkt sein)." required="true" example="2019-07-10"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='zulassungsantragAnfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="zulassungsantrag" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="zulassungsantrag" description="Meldung eines Zulassungsantrages bzw. der Basisdaten zur Vorbereitung einer Fortsetzungsmeldung. Im Zulassungsantrag sind auch die Vorschreibungdaten, aber keine Studiendaten enthalten."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='zulassungsantragAnfrage']//xs:element[@name='studierende']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Personendaten zum/zur Studierenden." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='zulassungsantragAnfrage']//xs:element[@name='vorschreibung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zahlungsinformationen (Vorschreibung) zum/zur Studierenden." required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='zulassungsantragAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="zulassungsantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="zulassungsantwort" description="Ergebnisrückmeldung nach Verarbeitung eines Zulassungsantrages. Gegebenenfalls wird eine Liste von Fehlermeldungen zurückgeliefert. Falls die Fehlerliste leer ist, wurde der Antrag vollständig und fehlerfrei verarbeitet."/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='stammdatenblockAnfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="stammdatenblockanfrage" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="stammdatenblockanfrage" description="Meldung einer großen Menge von Studierenden-Stammdaten inklusive Vorschreibung (Semesterdaten). Zur Detailbeschreibung siehe `stammdatenanfrage`."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='stammdatenblockAnfrage']//xs:element[@name='be']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="BE-Kennung (zweistellig)." position="2" required="true" example="UA" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='stammdatenblockAnfrage']//xs:element[@name='semester']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Semesterkennzeichen" position="3" required="true" example="2019W" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='stammdatenblockAnfrage']//xs:element[@name='student']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" name="student" position="4" value="Daten zu einem bzw. einer Studierenden bestehend aus Matrikelnummer, Stammdaten und Vorschreibung (Semesterdaten). Alle drei Elemente müssen bei der Block-Variante der Stammdatenmeldung vollständig vorhanden sein. In einem Request können beliebig viele Student-Elemente gemeldet werden, die sich jedoch alle auf die angegebene Bildungseinrichtung und das angegebene Semester bezeiehen." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='stammdatenblockAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="stammdatenblockantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="stammdatenblockantwort" description="Rückmeldung bei der Abfrage einer großen Menge von Studierendendaten."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='stammdatenblockAntwort']//xs:element[@name='datenstand']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" name="datenstand" position="2" value="Jüngstes Änderungsdatum aller Studierendendaten im Antwort-Datenbestand. Das Element gibt jenen Tag an, an dem im gesamten abgefragten Datenbestand die jüngste Änderung durchgeführt wurde bzw. garantiert, dass nach diesem Datum keine Datenänderungen mehr erfolgt sind." required="true" example="2019-09-01" dataType="java.util.Date" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='stammdatenblockAntwort']//xs:element[@name='be']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="BE-Kennung (zweistellig)." position="3" required="true" example="UA" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='stammdatenblockAntwort']//xs:element[@name='semester']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Semesterkennzeichen" position="4" required="true" example="2019W" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='stammdatenblockAntwort']//xs:element[@name='student']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" name="student" position="5" value="Daten zu einem bzw. einer Studierenden bestehend aus Matrikelnummer, Stammdaten und Vorschreibung (Semesterdaten). Alle drei Elemente müssen bei der Block-Variante der Stammdatenmeldung vollständig vorhanden sein. In einem Request können beliebig viele Student-Elemente gemeldet werden, die sich jedoch alle auf die angegebene Bildungseinrichtung und das angegebene Semester bezeiehen." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='StudentStudiumInfo']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="student"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Rückmeldung bei der Abfrage einer großen Menge von Studierendendaten. Die Daten beziehen sich auf genau ein Semester an genau einer Bildungseinrichtung, wobei diese Informationen im übergeordneten Element spezifiziert werden."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='StudentStudiumInfo']//xs:element[@name='datenstand']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="6" name="datenstand" value="Jüngstes Änderungsdatum aller zum/zur aktuellen Studierenden abgefragten Daten. Das Element gibt jenen Tag an, an dem im gesamten abgefragten Datenbestand die jüngste Änderung durchgeführt wurde bzw. garantiert, dass nach diesem Datum keine Datenänderungen mehr erfolgt sind." required="true" example="2019-09-01" dataType="java.util.Date" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='StudentStudiumInfo']//xs:element[@name='bezahlt']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="4" name="bezahlt" required="false" value="Aktuelle Zahlungsinformation zur Person im abgefragten Semester an der anfragenden Bildungseinrichtung." /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='StudentStudiumInfo']//xs:element[@name='studien']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="5" name="studien" value="Aktuell gemeldete Studien inkl. vorläufige Meldungen und Beurlaubungen." required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='StudentStudiumInfo']//xs:element[@name='studiumpruefungen']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="6" required="false" name="studiumpruefungen" value="Aktuell gemeldete Prüfungsaktivitäten. Über diesen Endpoint sind die Daten nur dann abfragbar, wenn auch Stammdaten gemeldet wurden. Andernfalls _pruefungsaktivitaeten.xml_ verwenden. Das Element ist nur dann vorhanden, wenn mindestens eine Prüfungsaktivität gemeldet wurde." /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='StudentStudiumInfo']//xs:element[@name='studiumabschluesse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="7" name="studiumabschluesse" value="Aktuell gemeldete Abschlüsse des/der Studierenden. Über diesen Endpoint sind die Daten nur dann abfragbar, wenn auch Stammdaten gemeldet wurden. Andernfalls _abschluesse.xml_ verwenden." required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='StudienDaten']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studien"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Liste von Studien ohne Prüfungsdaten. Verwende diese Variante bei der Meldung neuer Studiendaten oder wenn die zugehörigen Prüfungen und Abschlüsse bereits in einem anderen Element dargestellt werden."/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:element[@name='stammdatenanfrage']">
+            <jaxb:class name="StammdatenAnfrage"/>
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="stammdatenanfrage" description="Meldung von Studierenden-Stammdaten und/oder Vorschreibungsdaten. Im POST-Fall muss ein vollständiger Datensatz gesendet werden. Im PUT-Fall müssen bereits Daten vorhanden sein und es kann eine individuelle Datenauswahl übermittelt werden."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='uniStudentAnfrage']//xs:element[@name='studierendenkey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Verweis auf Studierenden (Matrikel/BE/Semester)." position="1" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:element[@name='stammdatenanfrage']//xs:element[@name='stammdaten']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Personendaten zum/zur Studierenden." position="2" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:element[@name='stammdatenanfrage']//xs:element[@name='vorschreibung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zahlungsinformationen (Vorschreibung) zum/zur Studierenden." position="3" required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='stammdatenAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="stammdatenantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="stammdatenantwort" description="Rückmeldung nach der Verarbeitung von Stammdatenmeldungen."/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+
+		<jaxb:bindings node="xs:complexType[@name='mitbelegungAntwortV2']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="mitbeleger" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="mitbeleger" description="Informationen zur Matrikelnummer auf Basis von (amtlichen) Mitbelegungsdaten. Die Daten stammen u.U. von anderen Bildungseinrichtungen, die mit der abfragenden Bildungseinrichtung durch gemeinsam eingerichtete Studien und/oder Mitbelegungen über die abgefragte Matrikelnummer verbunden sind."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='mitbelegungAntwortV2']//xs:element[@name='studentInfo']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Liste der gefundenen Mitbeleger-Informationen. Siehe Detailklasse für weitere Informationen." required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='mitbelegungAntwortV2']//xs:element[@name='datenstand']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Tag der Datenermittlung (kann früher als der tatsächliche Abfragezeitpunkt sein)." required="true" example="2019-07-10"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<!-- MitbelegungStudien -->
+		<jaxb:bindings node="xs:complexType[@name='mitbelegungStudien']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="Studium" description="Informationen zum Mitbeleger-Studium (gemeinsame Einrichtung, Lehramtsstudium oder Schließung an der zulassenden Bildungseinrichtung bei normaler Mitbelegung)."/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='mitbelegungAbschluss']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="Abschluss" description="Information zur erfolgten Abschlussprüfung an der zulassenden Bildungseinrichtung im Rahmen eines Mitbeleger-Studiums (gemeinsame Einrichtung, Lehramt, normale Mitbelegung)"/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<!-- Adresse -->
+		<jaxb:bindings node="xs:complexType[@name='adresse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="Adresse" description="Adresse-Element für die Abbildung einer Heimat oder Studienadresse."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='adresse']//xs:element[@name='strasse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Straße und Hausnummer der Adresse." required="true" example="Hintere Zollamtstaße 4" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='adresse']//xs:element[@name='plz']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Postleitzahl der Adresse. Mindestens ein und maximal acht Großbuchstaben oder Ziffern." required="true" example="1030" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='adresse']//xs:element[@name='ort']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Ortsangabe zur Adresse." required="true" example="Wien" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='adresse']//xs:element[@name='staat']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennzeichnung des Staates gemäß UNI-Codex. Unbedingt die spezifische Uni-Codexliste und keine ISO-Staatenangaben o.ä. verwenden!" required="true" example="A" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='adresse']//xs:element[@name='typ']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Einzelnes Zeichen. Erlaubt sind derzeit 'H' für 'Heimatadresse' und 'S' für 'Studienadresse/Zustellort' " required="true" example="S" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='adresse']//xs:element[@name='coname']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="c/o Angabe zur Adresse. Muss nur bei Bedarf im XML vorhanden sein." required="false" example="c/o Meier" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:simpleType[@name='adresstyp']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Einzelnes Zeichen. Erlaubt sind derzeit 'H' für 'Heimatadresse' und 'S' für 'Studienadresse/Zustellort'."/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<!-- BPKAntwort -->
+		<jaxb:bindings node="xs:complexType[@name='BPKAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="bpkantwort" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="BPKAntwort" description="Antwortmodell für die bPK-Ermittlung."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='BPKAntwort']//xs:element[@name='be']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennung der Bildungseinrichtung, deren bPKs in der folgenden Antwortliste geliefert werden." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='BPKAntwort']//xs:element[@name='semester']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Semesterkennung, auf deren Basis die Daten geliefert werden. Die bPK selbst ist grundsätzlich unabhängig vom Semester, allerdings liefert die Funktion nur jene Datensätze, für die im angegebenen Semester tatsächlich Daten vorhanden sind." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='BPKAntwort']//xs:element[@name='datenstand']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zusatzinformation zum Abfragezeitpunkt. Mit diesem Attribut wird festgehalten, wann die Daten aus dem Bestand des Datenverbundes extrahiert wurde (falls das XML-File erst später in den Datenbestand der Bildungseinrichtung eingespielt wird)."  required="true" example="2019-07-10" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='BPKAntwort']//xs:element[@name='bpk']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Gefundene bPK-Antwort-Datensätze. Pro Datenmeldung (ggf. im angegebenen Semester) wird ein Antwort-Element produziert." required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<!-- Datenfeld + Datensatz -->
+		<jaxb:bindings node="xs:complexType[@name='datensatz']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="XML-Darstellung des alten Batch-Modelles (gemäß Schnittstellendokumentation zur Batch-Verarbeitung). Mit diesem Modell ist es möglich, alte Satzbeschreibungen 1:1 in die REST-Webservices zu übernehmen bzw. neue Strukturen zunächst ohne explizites Schema zu implementieren. Formate, die dieses Modell verwenden, sind immer als 'vorläufig' zu sehen."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='datensatz']//xs:element[@name='feld']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Einzelnes Datenfeld gemäß Schnittstellenbeschreibung. Das Schema geht davon aus, dass jeder Datensatz zu Beginn mindestens drei Felder enthält, da auch im Batch-Modell immer die Felder Matrikelnummer, Uni-Kennzeichen und Semester vorhanden waren." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='datenfeld']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Bildet ein einzelnes Attribut eines Batch-Datensatzes als XML-Element ab."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='datenfeld']//xs:attribute[@name='id']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Alle Datenfelder sind mit dieser ID durchnummeriert. Nummer 01 bezeichnet das Feld 1 in der Satzbeschreibung usw.." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='datenfeld']//xs:attribute[@name='label']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Generischer Schlüsselwert des Datenfeldes (sprechender Name anstelle der Nummerierung)." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		
+		<!-- StudentInfo -->
+		<jaxb:bindings  node="xs:complexType[@name='studentInfo']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Stammdaten zum/zur Studierenden (Name, Adresse, Geburtsdatum, e-Mail, ...)." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoMitbelegung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Information zum Studierenden im Rahmen von Mitbelegungen." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoBasisAdressen']//xs:element[@name='adressen']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Von der zulassenden BE gemeldete Aressen (Heimatadresse, Zustelladresse)" required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoBasis']//xs:element[@name='akadgrad']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Akademischer Grad der Person (gemäß Meldung der zulassenden BE)" required="false" example="Mag." /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoBasis']//xs:element[@name='akadnach']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Dem Namen nachgestellter akademischer Grad (z.B. MBA)" required="false" exampe="BA" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfo']//xs:element[@name='beitragstatus']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Beitragsstatus gemäß Uni-CODEX im Kapitel Anhang. Fachhochschulen melden den Beitragsstatus `X` für `FH-Studierende mit ÖH-Beitragspflicht und individuell pro FH vorgeschriebener Studiengebühr. Das Feld ist auch bei FHs obligat!" required="true" example="I" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoExtended']//xs:element[@name='bpk']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Bereichsspezifische Personenkennung bzw. Personen-Kennzeichen. Die Kennung wird bei Bedarf vom Datenverbund ermittelt und an die meldenden BEs verteilt." required="false" example="DT2rvO4BNsJtH9xO2IaMBNMjP7w=" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfo']//xs:element[@name='emailadressen']">
+			<annox:annotate>
+				<annox:annotate annox:class="java.lang.Deprecated"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfo']//xs:element[@name='emailliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="E-Mail Adressen, die von der meldenden BE übermittelt wurden. Versionshinweis: Wurde in API-Version 0.5 von emailadressen auf emailliste geändert." required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoMinimal']//xs:element[@name='geburtsdatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Geburtsdatum der Person." required="true" dataType="java.util.Date" example="1964-01-15"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoMinimal']//xs:element[@name='geschlecht']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Geschlecht der Person: M=männlich, W=weiblich, X=divers" required="true" example="M"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoMitbelegung']//xs:element[@name='matrikel']">
+			<annox:annotate>
+				<annox:annotate annox:class="java.lang.Deprecated"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoMitbelegung']//xs:element[@name='matrikelnummer']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Matrikelnummer: achtstellig, nummerisch mit führenden Nullen (**ALTERNATIV ZU `matrikel`. Bis API-Version 0.5 `matrilel`, nach API-Verison 05 `matrikelnummer`. In API-Verison 0.5 ENTWEDER-ODER VERWENDEN!!**)" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoMinimal']//xs:element[@name='nachname']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Nachname bzw. Familienname der Person" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoBasis']//xs:element[@name='staatsbuergerschaft']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Staatsbürgerschaft der Person. Staaten-Code gemäß Uni-CODEX." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoMitbelegung']//xs:element[@name='studienliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zur Person gemeldete Studien" required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studentInfoMinimal']//xs:element[@name='vorname']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Vorname der Person." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='emailadresseMitTyp']">
+			<annox:annotate>
+				<annox:annotate annox:class="java.lang.Deprecated"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="e-Mail Adressse zur Person inklusive Herkunfts- und Verwendungsangabe." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='emailadresseMitTyp']//xs:element[@name='typ']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Verwendungszweck bzw. Herkunft der Mail-Adresse: BE=von Bildungseinrichtung bereitgestellt; PR=private Mail-Adresse des/der Studierenden." required="true" example="BE" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='emailadresseMitTyp']//xs:element[@name='adresse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="E-Mail Adresse gemäß RFC822 addr-spec" required="true" example="stud12345@uni.ac.at" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<!-- vorschreibung -->		
+		<jaxb:bindings node="xs:complexType[@name='vorschreibung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Beitragsvorschreibungen der meldenden Bildungseinrichtung zum/zur übermittelten Studierenden. **HINWEIS: Alle Beträge in CENT OHNE DEZIMALSTELLEN angeben!**" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='vorschreibung']//xs:element[@name='oehbeitrag']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Vorschreibung für ÖH-Beitrag **in CENT-Beträgen**." required="true" example="1920"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='vorschreibung']//xs:element[@name='sonderbeitrag']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Vorschreibung für den Sonderbeitrag (ÖH-Versicherung) **in CENT-Beträgen**." required="true" example="70"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='vorschreibung']//xs:element[@name='studienbeitrag']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Höhe eines allfällig vorgeschriebenen Studienbeitrages gemäß UG oder HSG **in CENT-Beträgen**. Hier angegebene Beträge sind pro Studierenden und Semester nur einmal zu entrichten und werden gemäß gesetzlicher Vorgaben auch bei der Bezahlstatus-Berechnung an anderen Bildungseinrichtungen berücksichtigt. Das Element muss auch dann vorhanden sein, wenn KEIN Studienbeitrag vorgeschrieben wird (Wert=0)" required="true" example="36336"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='vorschreibung']//xs:element[@name='studiengebuehr']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" default="0" value="Höhe einer allfällig vorgeschriebenen Studiengebühr **in CENT-Beträgen**. Hier angegebene Beträge werden ausschließlich an der vorschreibenden (meldenden) Bildungseinrichtung berücksichtigt. Falls an *derselben* Bildungseinrichtung pro Semester und Studierendem mehrere Studengebühren (z.B. für unterschiedliche Studien und/oder Zwecke) engehoben werden, sind diese zu addieren und in einer Vorschreibung zu melden. Das Element kann entfallen, wenn von der meldenden BE keine Studiengebühr vorgeschrieben wird." xample="36336"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='vorschreibung']//xs:element[@name='valutadatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Ende der normalen Einzahlungsfrist für den Studierendenbeitrag im Format JJJJ-MM-TT. Das Datum ist auch dann anzugeben, wenn es gleich mit dem Valuta-Nachfrist-Datum ist." required="true" dataType="java.util.Date" example="2019-10-15"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='vorschreibung']//xs:element[@name='studienbeitragnachfrist']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Höhe eines allfällig vorgeschriebenen Studienbeitrages gemäß UG oder HSG bei verspäteter Einzahlung **in CENT-Beträgen**. Element muss auch dann vorhanden sein, wenn KEIN Studienbeitrag vorgeschrieben wird (Wert=0)" required="true" example="39970"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='vorschreibung']//xs:element[@name='studiengebuehrnachfrist']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" default="0" value="Höhe einer allfällig vorgeschriebenen Studiengebühr bei verspäteter Einzahlung **in CENT-Beträgen**. Element kann entfallen, wenn keine Studiengebühr vorgeschrieben wird." example="39970"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='vorschreibung']//xs:element[@name='valutadatumnachfrist']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Ende der Nachfrist zur Beitragseinzahlung im Format JJJJ-MM-TT." required="true" dataType="java.util.Date" example="2019-11-30"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<!-- studium -->
+		<jaxb:bindings  node="xs:complexType[@name='studium']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Information zum Studium in der von der zulassenden Bildungseinrichtung gemeldeten Form." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studium']//xs:element[@name='abschluesse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Prüfungsdaten von der meldenden BE an die beteiligten BEs." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldung']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studium" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Information zum Studium in der von der zulassenden Bildungseinrichtung (UNI oder PH) gemeldeten Form." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldung']//xs:element[@name='studienkennung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="1" value="Kennung des Studiums." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldung']//xs:element[@name='meldestatus']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" value="Meldung der Fortsetzung des Studiums: **I**=Zulassung zum Studium im aktuellen Semester oder Fortsetzung des Studiums, **A**=Fortsetzung des Studiums bei gleichzeitigem Auslandsaufenthalt, **U**=Semester mit einer Beurlaubung. Im Batch-Szenario ist das Element unter der Bezeichnung `Fortsetzungskennzeichen` bekannt." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldung']//xs:element[@name='zugangsberechtigung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="4" value="Daten zur Universitätsreife. Kann entfallen, falls `zulassungsstatus` gleich **V** oder leer ist." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldung']//xs:element[@name='zulassungsdatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="5" value="Datum der Zulassung (Beginndatum des Studiums) Abhängig vom Element `zulassungsstatus` ist folgendes Datum anzugeben: **B**=das Zulassungsdatum, **F**=das Zulassungsdatum (Beginndatum des Abschnitts bei Studienzweig mit neuer KLZ), **V**=Das Datum des Zulassungsantrages, **X**=das zuletzt eingetragene (Zulassungs- oder Beginn)datum (Beendigungsdatum steht im Element `beendigungsdatum`)." required="true" dataType="java.util.Date" example="2015-03-01" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldung']//xs:element[@name='zulassungsstatus']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="6" value="Zulassungsstatus: **B**=Zulassung zum Studium (neu oder nach dem Erlöschen der Zulassung), **F**=Zulassung zum Studium ist aufrecht (nicht erloschen), **X**=Zulassung ist erloschen, **V**=Antrag auf Zulassung." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldung']//xs:element[@name='beendigungsdatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="7" value="Datum der Erlöschung des Studiums" required="true" dataType="java.util.Date" example="2017-05-30" /> 
+			</annox:annotate>
+		</jaxb:bindings>	
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldung']//xs:element[@name='mobilitaet']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="8" value="Mobilitätsprogramm gemäß Uni-CODEX. Ab API 0.5 ist die Angabe eines von/bis Datums zulässig. Dementsprechend sind auch meherer Mobilitäts-Datensätze zulässig. HINWEIS: In der nächsten API-Version wird das Element voraussichtlich erweitert, sodass mehrere Mobilitäten pro Studium unter Angabe eines von-bis Datums möglich sind." required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldung']//xs:element[@name='studienplan']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="9" value="Studienplan-Versionen zur gemeldeten Studienkennung." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldungFH']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studiengang" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Information zum Studium in der von der zulassenden Fachhochschule gemeldeten Form für ordentlich Studierende." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='StudiumMeldungFH']//xs:element[@name='stgkz']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Studiengannks-Kennzahl gemäß FH-Spezifikation. Kompletten siebenstelligen String (3 Ziffer Erhalter + 4 Ziffern für Studium) mit führenden Nullen angeben." required="true" example="1112222" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:group[@name='StudLehrgangMeldungFH']//xs:element[@name='zulassungsdatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Datum der Zulassung zum Studium Studiums" required="true" dataType="java.util.Date" example="2017-05-30" /> 
+			</annox:annotate>
+		</jaxb:bindings>	
+		<jaxb:bindings  node="xs:group[@name='StudLehrgangMeldungFH']//xs:element[@name='beendigungsdatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Datum der Erlöschung des Studiums" required="false" dataType="java.util.Date" example="2017-05-30" /> 
+			</annox:annotate>
+		</jaxb:bindings>	
+		<jaxb:bindings  node="xs:complexType[@name='LehrgangMeldungFH']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="lehrgang" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Information zum Lehrgang in der von der zulassenden Fachhochschule gemeldeten Form für außerordentlich Studierende." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='LehrgangMeldungFH']//xs:element[@name='lehrgangsnr']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Studiengannks-Kennzahl gemäß FH-Spezifikation. Kompletten siebenstelligen String (3 Ziffer Erhalter + 4 Ziffern für Lehrgang) mit führenden Nullen angeben." required="true" example="1113333" /> 
+			</annox:annotate>
+		</jaxb:bindings>	
+
+		<jaxb:bindings  node="xs:complexType[@name='studienplan']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Bezeichnung von Studienplänen. Die Studienplanbezeichnung erlaubt die gemeinsame ANgabe von Studienplänen für ein bis zwei Fächer. Im Datenverbund ist die Studienplanbezeichung pro Fach immer eine Semesterbezeichnung, d.h. sie folgt den Syntax-Vorgaben von Semesterangaben (Jahreszahl + Buschstabe W oder S)" required="true"/> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studienplan']//xs:element[@name='fach1']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="1" value="Studienplanversion, entweder für Fach 1 (falls das Studium zwei Fächer umfasst) oder generelle Studienplanversion (falls es kein Fach2 gibt)." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studienplan']//xs:element[@name='fach2']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="2" value="Studienplanversion des zweiten Faches. Falls das Studium keine Fachunterscheidung besitzt, darf diese Element nicht verwendet werden." required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		
+		<jaxb:bindings  node="xs:complexType[@name='studienkennung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Vollständige Bezeichnung eines Studienbildes."/> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studienkennung']//xs:element[@name='studiengesetz']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennzeichnung des Studiengesetzes: U=Universitätsgesetz, H=Hochschulgesetz, L=Lehramtsstudium, A=obsolet (nicht mehr verwenden)" required="true" position="1" example ="L" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studienkennung']//xs:element[@name='bezulassung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zweistellige BE-Kennung (haupt-)zulassenden Bildungseinrichtung" required="true" example="UA" position="2"/> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studienkennung']//xs:element[@name='skz1']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennzahl 1 des Studiums (dreistellig, nummerisch, führende Nullen)" required="true" position="3" example="190" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studienkennung']//xs:element[@name='skz2']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennzahl 2 des Studiums (dreistellig, nummerisch, führende Nullen). Falls nicht vorhanden, entfällt das Element (kein leeres Element codieren)." required="false" position="4" example="333"  /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studienkennung']//xs:element[@name='skz3']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennzahl 3 des Studiums (dreistellig, nummerisch, führende Nullen). Falls nicht vorhanden, entfällt das Element (kein leeres Element codieren)." required="false" position="5" example="313"  /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='studienkennung']//xs:element[@name='bezwei']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Beteiligte Bildungseinrichtung (2 Zeichen, alphabetisch) oder Verbund-Kennzeichen mit führender Null (2 Ziffern). Falls nicht vorhanden, entfällt das Element (kein leeres Element codieren)." required="false" example="02" position="6" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+
+		<jaxb:bindings  node="xs:complexType[@name='mobilitaet']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Information zum Mobilitätsprogramm im Rahmen eines Studiums. Das Mobilitätsprogramm wird gemäß Uni-CODEX (Liste BMWFW) angegeben. Hinweis: Für Studien vor WS 2011 wurde das Mobilitätsprogramm bei den Studierendendaten übergeben. Falls beim Studium die Mobilitäts-Kennziffer '00' gemeldet wurde oder leer ist, entfält dieses Element. Falls bei Mitbelegern widersprüchliche Mobilitätsmeldungen vorliegen, wird das Mobilitätsprogramm der zulassenden Bildungseinrichtung gemeldet." /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='mobilitaet']//xs:element[@name='programm']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennzahl des Mobilitätsprogrammes gemäß Uni-CODEX." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='mobilitaet']//xs:element[@name='staat']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Gastland des Mobilitätsprogrammes gemäß Uni-CODEX (*NICHT* ISO-Ländercode verwenden!)." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+
+		<jaxb:bindings  node="xs:complexType[@name='mobilitaetVonBis']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Erweiterte Form der Mobilitätsmeldung. Zusätzlich werden Beginn und Ende eines Auslandsstudiums sowie in codierter Form der Zweck angegeben. Dementsprechend müssen u.U. auch mehrere Mobilitätsmeldung pro Studium und Semester erforlgen. Dierzeit ist diese Variante nur für Fachhochschulen vorgesehen. In zukünftigen Versionen ist diese Meldungsvariante auch für Uni/PH obligat." /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='mobilitaetVonBis']//xs:element[@name='von']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Beginn des Auslandsaufenthaltes." dataType="java.util.Date" example="2020-09-01" required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='mobilitaetVonBis']//xs:element[@name='bis']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Ende des Auslandsaufenthaltes." dataType="java.util.Date" example="2020-09-01" required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='mobilitaetFH']//xs:element[@name='zweck']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zweck des Auslandsaufenthaltes gemäß FH-Codex." dataType="java.util.Date" example="2020-09-01" required="false" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+			
+		<jaxb:bindings  node="xs:complexType[@name='zugangsberechtigung']//xs:element[@name='datum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Datum der Universitätsreife im Format JJJJ-MM-TT. TT ist immer 01, da die Universitätsreife immer per Monat angegeben wird (Tag 01 bedeutet: Irgendwann zwischen erstem und letztem des Monats). Bei den Schulformen 35 und 98 ist dieses Feld leer. Bei Form 99 kann es mit 9999-99-99 besetzt werden." required="true" dataType="java.util.Date" example="1983-05-20" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='zugangsberechtigung']//xs:element[@name='staat']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Ausstellungsstaat der allgemeinen Universitätsreife lt. Uni-CODEX." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='zugangsberechtigung']//xs:element[@name='voraussetzung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Form der allgemeinen Universitätsreife gemäß Uni-CODEX (zweistellig, nummerisch)" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>		
+		
+		<!-- FH & PH Integration -->
+		
+		<jaxb:bindings node="xs:complexType[@name='matrikel-clearing-meldung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="MatrikelClearingMeldung" description="Container zur Meldung von Studierendendaten zum Clearing für Fachhochschulen und Privatuniversitäten."/>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="MatrikelClearingMeldung" namespace="http://www.brz.gv.at/datenverbund-unis" />
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='matrikel-clearing-antwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="MatrikelClearingAntwort" description="Container zum Download von Studierendendaten nach dem Clearing für Fachhochschulen und Privatuniversitäten."/>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="MatrikelClearingAntwort" namespace="http://www.brz.gv.at/datenverbund-unis" />
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='matrikel-clearing-meldung']//xs:element[@name='uuid']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Transaktions-ID" example="bb4dbcb5-7864-4a97-ba5c-f87b09a3dd8d" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='matrikel-clearing-meldung']//xs:element[@name='meldeuni']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zweistellige Kennung der meldenden Bildungseinrichtung. Muss mit der Kennung der aktuell angemeldeten Bildungseinrichtung korrespondieren." example="FA" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='matrikel-clearing-meldung']//xs:element[@name='meldedatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Datum des Datenabzuges durch die meldende Bildungseinrichtung im Format JJJJ-MM-TT (i.A. identisch mit dem aktuellen Datum)." dataType="java.util.Date" example="2018-06-01" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='matrikel-clearing-antwort']//xs:element[@name='meldeuni']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zweistellige Kennung der meldenden Bildungseinrichtung. Muss mit der Kennung der aktuell angemeldeten Bildungseinrichtung korrespondieren." example="FA" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='matrikel-clearing-antwort']//xs:element[@name='meldedatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Stellt einen Bezug zur ursprünglichen Datenmeldung her und enthält das ursprünglich gemeldete Datum des Datenabzuges durch die meldende Bildungseinrichtung im Format JJJJ-MM-TT (i.A. identisch mit dem aktuellen Datum)." dataType="java.util.Date" example="2018-06-01" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='matrikel-clearing-antwort']//xs:element[@name='studierende']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Liste der im Clearing bearbeiteten Daten inklusive der vom Datenverbund ermittelten Daten (bPK, Matrikelnummer)." /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='personliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="Personenliste" description="Die Personenliste entält alle Studierenden, für die eine Matrikelnummer benötigt wird."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='personliste']//xs:element[@name='personen']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Auflistung aller Personen, die mit einer Matrikelnummer auszustatten sind." required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='person']">
+			<annox:annotate>
+			<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="Person" description="Daten zur Person. Die vorhandenen Merkmale (insbesondere SVNr, bPK, Geburtsdatum, Nachname, Vorname) werden verwendet, um eine gegebenenfalls bereits vorhandene Matrikelnummer im Bestand des Datenverbundes zu identifizieren. Bei übereinstimmender SVNr und/oder bPK werden Abweichungen z.B. bei der Namensschreibweise toleriert. Sind keine SVNr (bzw. EKZ) und/oder bPK vorhanden, werden Namensschreibweisen exakt geprüft."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='person']//xs:element[@name='vorname']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Vorname der Person" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='person']//xs:element[@name='nachname']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Nachname der Person" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='person']//xs:element[@name='gebDatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Geburtsdatum der Persom im Format YYYY-MM-TT." dataType="java.util.Date" example="1983-01-15" />
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='person']//xs:element[@name='studstatuscode']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Studierendenstatus lt. BIS (FH). Erlaubte Werte: '1'=Aktive/r StudentIn;'2'=UnterbrecherIn;'3'=AbsolventIn;'4'=Ausgeschieden ohne Abschluss;'5'=Uebertritt" example="1" />
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='person']//xs:element[@name='zustelladresse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zustelladresse der Person" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='person']//xs:element[@name='geschlecht']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Geschlecht der Person. W=weiblich, M=maennlich, X=divers" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings node="xs:complexType[@name='clearingAdresse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Adresse speziell für das FH und PU Clearing"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='clearingAdresse']//xs:element[@name='plz']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value = "Postleitzahl der Adresse" example="1030" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='clearingAdresse']//xs:element[@name='strasse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value = "Straße und Hausnummer der Adresse" example="Hintere Zollamtstraße 4" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='clearingAdresse']//xs:element[@name='ort']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value = "Ortsangabe zur Adresse" example="Wien" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='clearingAdresse']//xs:element[@name='staat']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value = "Kennzeichnung des Staates gemäß UNI-Codex. Unbedingt die spezifische Uni-Codexliste und keine ISO-Staatenangaben o.ä. verwenden!" example="A" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+				
+		<jaxb:bindings node="xs:complexType[@name='person']//xs:element[@name='heimatadresse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Heimatadresse der Person" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:group[@name='svnrOrEkz']//xs:element[@name='svnr']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Sozialversicherungsnummer der Person. Grundsätzlich ein Pflichtfeld, außer es wurde ein Ersatzkennzeichen angegeben." required="false" example="1234830115"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:group[@name='svnrOrEkz']//xs:element[@name='ekz']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Ersatzkennzeichen der Person falls keine SVNR bekannt ist. Diese wird angefordet über `ekzanfordern.xml`.  Entweder svnr oder ekz muss vorhanden sein." required="false" example="SOBT200175"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='phPersonId']//xs:element[@name='bpk']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Bereichsspezifisches Personenkennzeichen (Bereich BF) der Person" required="false" example="i3VORWSPWi94Q662J1rOArln2TU="/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='phPersonId']//xs:element[@name='matrikelnummer']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Matrikelnummer der Person (falls bereits bekannt)" required="false" example="00000000"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='phPersonId']//xs:element[@name='personenkennzeichen']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="FH-spezifisches Kennzeichen der Person (1-255 alphanumerische Zeichen). FHs verwenden das Personenkennzeichen bis zum WS 2018 alternativ zur Matrikelnummer. Dieses Kennzeichen ist innerhalb der Organisation eindeutig und wird beispielsweise für BIS-Meldungen verwendet. Bitte nicht mit dem Feld `personenkennzeichen` im Typ `personmeldung` und `student` verwechseln. Dort enthält das Feld das _bereichsspezifische Personenkennzeichen BF_ (bPK). " required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:element[@name='ekzUseCase']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="ekzUseCase" namespace="http://www.brz.gv.at/datenverbund-unis" />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="ekzUseCase" description="Request-Element zur Ermittlung von Ersatzkennzeichen für eine oder mehrere Personen."/>
+			</annox:annotate>
+			<jaxb:class name="EkzUseCase"/>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:element[@name='ekzUseCase']//xs:element[@name='ekzAnforderung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Gesammelte Daten für 1-n EKZ Ermittlungen" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAnforderung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Beinhaltet alle Daten für eine EKZ Anforderung. Da dieser Typ auch im Response verwendet wird, enthält er auch Elemente, die nur für die Response relevant sind." />
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAnforderung']//xs:element[@name='ekzBasis']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Beinhaltet personenbezogene Daten der EKZ Anforderung" required="true" />
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAnforderung']//xs:element[@name='ekz']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Ersatzkennzeichen, welches ermittelt wurde. Nur im Response relevant."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAnforderung']//xs:element[@name='kandidaten']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Basisdaten und EKZ aller möglicher Suchkandidaten. Nur im Response relevant."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAnforderung']//xs:element[@name='returncode']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Verarbeitungs-Status für jede einzelne Unter-Antwort, und zwar in ReturnCode und ReturnText entsprechend EKZ Leistungsbeschreibung. z.B Status 0 mit Returntext EKZ vorhanden. Nur im Response relevant."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAnforderung']//xs:element[@name='returntext']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Dedeutung des Return Code. Nur im Response relevant."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAnforderung']//xs:element[@name='forcierungskey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Wird benötigt für die Eintragung eines Ersatzkennzeichens zu einer Person bei denen das Statistik Webservice einen Vorschlag zu den angegebenen Personendaten findet."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzBasisdaten']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Beinhaltet alle personenbezogenen Daten einer EKZ Anforderung" />
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzBasisdaten']//xs:element[@name='vorname']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Vorname der Person. Maximal 80 Zeichen." required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzBasisdaten']//xs:element[@name='nachname']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Nachname der Person. Maximal 80 Zeichen." required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzBasisdaten']//xs:element[@name='geschlecht']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Geschlecht der Person. W=weiblich, M=maenlich, X=divers" example="W" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzBasisdaten']//xs:element[@name='gebDatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Geburtsdatum der Persom im Format YYYY-MM-TT." dataType="java.util.Date" example="2001-03-18" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzBasisdaten']//xs:element[@name='orgKey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Bezeichnung der meldenden Organisationseinheit. Das Element ist optional und wird gegebenenfalls vom Datenverbund automatisch ermittelt." example="UNIA" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzBasisdaten']//xs:element[@name='svnr']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Sozialversicherungsnummer"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzBasisdaten']//xs:element[@name='adresse']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Adresse der Person" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzBasisdaten']//xs:element[@name='requestTimestamp']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zeitpunkt an dem der Request abgesetzt wird." dataType="java.util.Date" example="2018-04-19T15:06:31.162+02:00" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='kandidat']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Bei mehreren Suchergebnisse werden diese in Form eines Kandidaten angezeigt. Dieser besteht aus EKZBasisdaten und EKZ. Im Request entfällt dieses Element." required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Root Objekt der EKZ Antwort" />
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAntwort']//xs:element[@name='ekzAnforderung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Beinhaltet alle Responsedaten der EKZ Anforderung"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='ekzAntwort']//xs:element[@name='rueckgabewert']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kapselung von Returncode und Returntext des gesammten Requests."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAntwort']//xs:element[@name='responseTimestamp']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Responsezeitpunkt."/>
+			</annox:annotate>
+		</jaxb:bindings>		
+		
+		<jaxb:bindings node="xs:complexType[@name='rueckgabewert']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Nur im Fall einer Antwort mit Status-Code 200 wurde die Anfrage überhaupt verarbeitet. Genau dann wird auch ein Verarbeitungs-Status für jede einzelne Unter-Antwort geliefert, und zwar in ReturnCode und ReturnText entsprechend EKZ Leistungsbeschreibung."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='rueckgabewert']//xs:element[@name='responsecode']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Response der gesamten Anfrage"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='rueckgabewert']//xs:element[@name='responsetext']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Text zur Bedeutung des Return Code."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='zahlungsanfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="zahlungsanfrage" namespace="http://www.brz.gv.at/datenverbund-unis"  />
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="zahlungsanfrage" description="Root Objekt des Zahlungsrequests."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='zahlungsanfrage']//xs:element[@name='zahlungsart']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="1 - Bankomatzahlung, 2 - Quickzahlung" position="5" example="2" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='zahlungsanfrage']//xs:element[@name='betrag']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zahlungsbetrag in Cent." position="6" example="1970" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='zahlungsanfrage']//xs:element[@name='buchungsdatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Buchungsdatum der Zahlung." position="7" required="true" dataType="java.util.Date" example="2019-03-14"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='zahlungsanfrage']//xs:element[@name='referenznummer']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Um Doppelbuchungen zu vermeiden muss eine *eindeutige* Referenznummer für *jeden* Zahlungseingang übermittelt werden." position="8" example="18243523456" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='kontostandantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="kontostandantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="kontostandantwort" description="Response Objekt."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='KontostandListe']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="kontostandliste" description="Beinhaltet alle Kontostandinformationen aller Studierenden seit einem bestimmten Buchungsdatum eines bestimmten Semesters"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='Kontostand']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="kontostand" description="Beinhaltet Kontostandinformationen zu genau einer Person in einem Semester."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+<!-- 		<jaxb:bindings node="xs:complexType[@name='kontostand']//xs:element[@name='studierendenkey']"> -->
+<!-- 			<annox:annotate> -->
+<!-- 				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Matrikelnummer (achtstellig mit führenden Nullen)"/> -->
+<!-- 			</annox:annotate> -->
+<!-- 		</jaxb:bindings> -->
+		
+		<jaxb:bindings node="xs:complexType[@name='KontostandBasis']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="bezahlt"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Beinhaltet Kontostandinformationen, wobei die zugehörige Person im übergeordneten Element identifiziert wird."/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='KontostandBasis']//xs:element[@name='bezahlstatus']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Bezahlstatus des Semesters. Dabei entspricht 0 = Vorgeschrieben = noch kein Zahlungseingang vermerkt, 1 = Betrag nicht ok = Zahlungseingang deckt nicht die volle Vorschreibung ab, 2 = Bezahlung ist erfolgt, aber außerhalb der Zahlungsfrist, 8 = bezahlt auf anderer Bildungseinrichtung = alles ok, 9 = bezahlt an eigener Bildungseinrichtung" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='KontostandBasis']//xs:element[@name='kontostand']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Aktueller Kontostand zur Matrikelnummer und Semester in Cent." required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='KontostandBasis']//xs:element[@name='buchungsdatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Buchungsdatum" example="2019-02-06" dataType="java.util.Date" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='KontostandBasis']//xs:element[@name='buchungsbe']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Bildungseinrichtung die einen Zahlungseingang gemeldet hat." required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='studierendefehlerantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studierendefehlerantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="studierendefehlerantwort" description="Response Objekt der fehler.xml Resource. Liefert Fehlermeldungen für 1-n Personen."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studierendefehlerantwort']//xs:element['studierendefehlerlisten']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="enthält 1-n Fehlerlisten" required="true" />
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studierendefehlerlisten']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="studierendefehlerlisten" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studierendefehlerlisten']//xs:element[@name='studierendefehlerliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty"  required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studierendefehlerliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="studierendefehlerliste" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studierendefehlerliste']//xs:element[@name='studierendenkey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="1" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studierendefehlerliste']//xs:element[@name='fehlerliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="2" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='matrikelkorrekturanfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="matrikelkorrekturanfrage" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="matrikelkorrekturanfrage" description="TODO Root Objekt der matrikelkorrekturanfrage Response"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='matrikelkorrekturantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="matrikelkorrekturantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="matrikelkorrekturantwort" description="TODO Root Objekt der matrikelkorrekturantwort Response"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienanfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studienanfrage" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="studienanfrage" description="Meldung von Studiendaten."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studienanfrage']//xs:element[@name='studien']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" name="studien" position="3" value="Liste der gemeldeten Studien. Es müssen immer sämtliche Studien des/der betroffenen Studierenden an der meldenden Bildungseinrichtung gemeldet werden." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienloeschanfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studienloeschanfrage"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="studienloeschanfrage" description="Löschen von Studien. Das Löschen von Studien ist nur unter starkt eingeschränkten Rahmenbedingungen zulässig. Es dürfen weder Prüfungsmeldungen noch Abschlüsse und auch keine Fortsetzungsmeldungen im Folgesemester oder Mitbelegungen an anderen Bildungseinrichtungen vorhanden sein."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='studienloeschanfrage']//xs:element[@name='studienkennung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennung des zu löschenden Studiums. Es ist nicht zulässig, mit diesem Request mehrere (bzw. alle) Studien gleichzeitig zu löschen. Der Request muss gegebenenfalls für jedes Studium einmal aufgerufen werden." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienloeschantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studienloeschantwort"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="studienloeschantwort" description="Löschen von Studien. Das Löschen von Studien ist nur unter starkt eingeschränkten Rahmenbedingungen zulässig. Es dürfen weder Prüfungsmeldungen noch Abschlüsse und auch keine Fortsetzungsmeldungen im Folgesemester oder Mitbelegungen an anderen Bildungseinrichtungen vorhanden sein."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studienantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="studienantwort" description="Rückmeldung nach Übermittlung/Abfrage/Update/Löschen von Studiendaten. **ACHTUNG!** Element `studium` wird zwecks Konsistenz mit Abfragefunktionen ab API 0.6 durch `studienliste` ersetzt. Bitte nur mehr das Element `studienliste` verwenden."/>
+			</annox:annotate>
+		</jaxb:bindings>  
+		<jaxb:bindings  node="xs:complexType[@name='studienantwort']//xs:element[@name='studienliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Studiendaten zum/zur Studierenden. Für Studierende, die an einer Bildungseinrichtung mehrere Studien betreiben, sind mehrere getrennte Meldungen notwendig." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name= 'simpleBpkResponse']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="simpleBpkResponse" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="simpleBpkResponse" description="Rückmeldung Abfragen zum bPK (bereichsspezifischen Personenkennzeichen)."/>
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings  node="xs:complexType[@name='simpleBpkResponse']//xs:element[@name='personenkennzeichen']">
+			<annox:annotate>
+				<annox:annotate annox:class="java.lang.Deprecated"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='simpleBpkResponse']//xs:element[@name='bpk']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Vom Stammzahlenregister ermitteltes bereichsspezifisches Personenkennzeichen zu den angefragten Daten. Falls kein eindeutiges bPK ermittelt wurde, fehlt dieses Element und die Antwort enthält eine entsprechende Fehlermeldung oder Vorschläge für passende Personendaten (mit zusätzichen Informationen). Hinweis: Ab API-Version 0.5 wird das bisher verwendete Element `personenkennzeichen` durch `bpk` ersetzt." required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='kennzahlenantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="kennzahlenantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="kennzahlenantwort" description="Rückmeldung von Statstik-Kennzahlen."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		
+		<jaxb:bindings node="xs:complexType[@name='matrikelpruefungantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="matrikelpruefungantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="matrikelpruefungantwort" description="Root Objekt der Matrikelprüfung Responses"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='matrikelpruefungantwort']//xs:element[@name='matrikelpruefergebnis']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Ergebnis der Matrikelpruefung mit Statuscode/message und optional Matrikelliste." position="3" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		
+		<jaxb:bindings node="xs:complexType[@name='Matrikelpruefergebnis']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="matrikelpruefergebnis" description=""/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='Matrikelpruefergebnis']//xs:element[@name='statuscode']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="1" value="Statuscodewerte siehe `matrikelpruefung.xml`" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='Matrikelpruefergebnis']//xs:element[@name='statusmeldung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="2" value="Statusmeldung siehe `matrikelpruefung.xml`. Textuelle Beschreibung des Statuscodes mit den Abfrageparameter (nicht bei jeden Statuscode)." required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='Matrikelpruefergebnis']//xs:element[@name='matrikelliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" value="Liste aller gefundener Matrikelnummern." required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='MatrikelListe']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="matrikelListe" description="Beinhaltet 0-n gefundene Matrikelnummern in Form von Studierendenkeys."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='MatrikelListe']//xs:element[@name='extendedstudierendenkey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Bildet 0-n gefundene Matrikelnummern ab mit zusätzlichen Attributen."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ExtendedStudierendenKey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="extendedstudierendenkey" description="Erweiterung des Studierendenkeys um einen Zustand der Matrikelnummer und einen Link auf die FullStudentabfrage."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings  node="xs:complexType[@name='ExtendedStudierendenKey']//xs:element[@name='matrikel']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='ExtendedStudierendenKey']//xs:element[@name='matrikelnummer']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Matrikelnummer: achtstellig, nummerisch mit führenden Nullen (**ALTERNATIV ZU `matrikel`. Bis API-Version 0.5 `matrilel`, nach API-Verison 05 `matrikelnummer`. In API-Verison 0.5 ENTWEDER-ODER VERWENDEN!!**)" required="true" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ExtendedStudierendenKey']//xs:element[@name='be']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="2" value="Kennung jener Bildungseinrichtung, von der die Daten gemeldet wurden." required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ExtendedStudierendenKey']//xs:element[@name='semester']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" value="Semester, zu dem die Daten gemeldet wurden." required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ExtendedStudierendenKey']//xs:element[@name='matrikelstatus']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="4" value="Status der Matrikelnummer. Siehe Kapitel _Matrikelnummer - Life Cycle_. Derzeit unterstützt sind Ungültig, Zugeordnet, Vergeben und Gesperrt." required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ExtendedStudierendenKey']//xs:element[@name='fullstudentlink']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="5" value="Beinhaltet einen Link auf die `fullStudent.xml` für eine Abfrage von detailierten Studierendendaten." required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		
+		<jaxb:bindings node="xs:complexType[@name='fullstudentantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="fullstudentantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="fullstudentantwort" description="Die Fullstudentantwort liefert zu genau einer Matrikelnummer detaillierte Studierendendendaten bestehend aus Personendaten, Studiendaten und Studienbeitragsdaten."/>
+			</annox:annotate>
+		</jaxb:bindings>		
+		<jaxb:bindings node="xs:complexType[@name='fullstudentantwort']//xs:element[@name='unistudentinfos']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" required="false" name="unistudentinfos" value="Liefert Studierendaten aus dem Zulassungsprozess über `stammdaten.xml`"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='fullstudentantwort']//xs:element[@name='gesamtstudentinfos']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="4" required="false" name="gesamtstudentinfos" value="Liefert Studierendendaten aus der Gesamtevidenz. Daten in diesem Objekten entscheiden primär darüber ob eine Matrikelnummer für eine Person übernommen werden kann, wenn der Datenverbund keine eindeutige Matrikelnummer feststellen kann."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='GesamtStudentInfos']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="gesamtstudentinfos"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Liefert Studierendendaten aus der Gesamtevidenz. Daten in diesem Objekten entscheiden primär darüber ob eine Matrikelnummer für eine Person übernommen werden kann, wenn der Datenverbund keine eindeutige Matrikelnummer feststellen kann." />
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='GesamtStudentInfos']//xs:element[@name='gesamtstudentinfo']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Liefert Studierendendaten aus der Gesamtevidenz. Daten in diesem Objekten entscheiden primär darüber ob eine Matrikelnummer für eine Person übernommen werden kann, wenn der Datenverbund keine eindeutige Matrikelnummer feststellen kann." />
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='GesamtStudentInfo']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="gesamtstudentinfo"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Liefert Studierendendaten aus der Gesamtevidenz. Daten in diesem Objekten entscheiden primär darüber ob eine Matrikelnummer für eine Person übernommen werden kann, wenn der Datenverbund keine eindeutige Matrikelnummer feststellen kann. **ACHTUNG!** Element `zugangsberechtigung` wurde im Abnahmetest entfernt und durch `maturadatum` ersetzt!"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='GesamtStudentInfo']//xs:element[@name='matrikelstatus']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Status der Matrikelnummer. Siehe Kapitel Matrikelnummer - Life Cycle. Derzeit unterstützt sind Ungültig, Zugeordnet, Vergeben und Gesperrt."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='GesamtStudentInfo']//xs:element[@name='maturadatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Datum der Universitätsreife oder eines äquivalenten ausländischen Abschlusses. Hinweis: Der Datenverbund speichert nur Jahr und Monat des Abschlusses. Bei der Meldung ist daher immer der erste des entsprechenden Monats anzugeben. Falls zur Zulassung kein Nachweis der Uni-Reife erforderlich ist (z.B. Kunst-Studien), entfällt dieses Element vollständig." dataType="java.util.Date" example="1983-05-01" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='UniStudentInfos']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="unistudentinfos"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Liefert Studierendaten aus dem Zulassungsprozess über `stammdaten.xml`"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='UniStudentInfos']//xs:element[@name='unistudentinfo']">
+			<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Enthält 0-n Studierendendaten aus dem Zulassungsprozess über `stammdaten.xml`"/>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='UniStudentInfo']//xs:element[@name='studierendenkey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Meldungsquelle der Studierendendaten (Matrikelnummer, Bildungseinrichtung, Semesterkennzeichen)" />
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='FullStudentInfo']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="fullstudentinof"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Enthält detailierte Stammdaten, Studiendaten und Studienbeitragsdaten zu einer Matrikel/BE-Kennzeichen/Semester"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='FullStudentInfo']//xs:element[@name='studienbeitrag']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Studienbeitragsdaten zu matrikel/be/semester"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='FullStudentInfo']//xs:element[@name='studienliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Studiendaten zu matrikel/be/semester"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='refundierungsanfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="refundierungsanfrage"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="refundierungsanfrage" description="Request Objekt der Refundierungsanfrage."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsanfrage']//xs:element[@name='refundierungsbetrag']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Refundierungsbetrag in Cent" example="1970" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsanfrage']//xs:element[@name='bearbeitungsname']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Name (Portalkennung) des Bearbeiters, der die Refundierung veranlasst hat." example="Tester BRZ" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='refundierungsantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="refundierungsantwort"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="refundierungsantwort" description="Response Objekt der Refundierung."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsantwort']//xs:element[@name='refundierungsmeldung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Liste von Refundierungsereignissen zur Information an die abfragende Bildungseinrichtung."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsmeldung']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="refundierungsmeldung"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="refundierungsmeldung" description="Datenobjekt zur Weitermeldung (Verteilung) eines Refundierungsereignisses an beteiligte Bildungseinrichtungen."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsmeldung']//xs:element[@name='refundierungsart']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="1 - Zulassungsrelevante Rückerstattung (mit Betragsabsenkung) 2 - BE-spezifische Refundierung (ohne Betragsabsenkung)" example="1"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsmeldung']//xs:element[@name='refundierungsbetrag']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Refundierungsbetrag in Cent" example="1970"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsmeldung']//xs:element[@name='durchfuerungsdatum']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Durchführungsdatum der Refundierung (YYYY-MM-DD)" dataType="java.util.Date" example="2019-03-12"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsmeldung']//xs:element[@name='refundierungsbe']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="BE bei der der Betrag zur Refundierung angewiesen wurde" example="UA"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsmeldung']//xs:element[@name='verfahrensstatus']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="A - Abgeschlossen S - Storniert" example="A"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='refundierungsmeldung']//xs:element[@name='bearbeitungsname']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Sachbearbeiter / Webservice"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<!-- ************************************** PRUEFUNGSAKTIVITAETEN *************************************************** -->
+		
+		
+		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaetenanfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="pruefungsaktivitaetenanfrage" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="pruefungsaktivitaetenanfrage" description="Root Objekt des pruefungsaktivitaeten Responses"/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaetenanfrage']//xs:element[@name='studiumpruefungen']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Liste jener Studien(-Kennungen), für die Prüfungasaktivitäten gemeldet werden. Der Endpoint ist nur dann zu verwenden, wenn mindestens eine Prüfungsaktivität zu melden ist. Um sämtliche Prüfungsaktivitäten zu löschen, ist der entsprechende DELETE-Endpoint vorgesehen." name="studiumpruefungen" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='studiumpruefung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="studiumpruefung" description="Beschreibung einer Prüfungsaktivität zum Studium und Studierenden."/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='studiumpruefung']//xs:element[@name='studierendenkey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="1" value="Verweis auf die Studierendendaten (Matrikelnummer, Bildungseinrichtung, Semester)"/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='studiumpruefung']//xs:element[@name='studienkennung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="2" value="Bezeichnung des Studiums, zu dem die Prüfungen abgelegt wurden."/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='studiumpruefung']//xs:element[@name='pruefungen']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" value="Ein oder mehrere Prüfungen, die vom angegebenen Studierenden im Semester abgelegt wurden. Es ist notwendig, dass immer alle Prüfungen übermittelt werden (nicht nur eventuell neu hinzugekommene)."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='pruefung']//xs:element[@name='semesterzahl']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Erreichte Zahl fortgesetzt gemeldeter Semester einschließlich des Berichtssemesters für Fach 1 oder Fach 2"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='pruefung']//xs:element[@name='semesterstunden']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Semesterstundenzahl für Fach-1 oder Fach-2: Nicht im Curriculum enthaltene Prüfungen, wie Ergänzungsprüfungen auf Grund der Universitätsberechtigungsverordnung oder solche zur Herstellung der Gleichwertigkeit eines ausländischen Reifezeugnisses, bleiben außer Betracht. Zu berücksichtigen sind jene Prüfungen, die auch für die Bestätigung zum Fortbezug der Familienbeihilfe einzubeziehen sind, zusätzlich jedoch auch jene mit negativem Ergebnis. In schriftlich und mündlich geteilte Prüfungen, bei denen es durch den negativen Abschluss des schriftlichen Teiles zu keinem mündlichen Antritt mehr kommt, sind ebenfalls als negativ beurteilte Prüfungen einzubeziehen.
+Nicht einzubeziehen sind Prüfungsanerkennungen. Eine Prüfungsanerkennung liegt auch vor, wenn eine Prüfung, die ein/e Studierende/r ablegt, sogleich in mehreren Curricula verwertet wird, weil die oder der Studierende gleichzeitig zu mehreren Studien mit inhaltlichen Überlappungen zugelassen ist. Die Prüfung wird in einem einzigen dieser ordentlichen Studien abgelegt und ist dort zu berücksichtigen. In den übrigen Studien wird sie anerkannt und ist dort für die gegenständliche Auswertung nicht zu berücksichtigen.
+Eine Diplom-Teilprüfung (Fachprüfung) ist mit der Semesterstundenzahl laut Curriculum (Studienplan) anzusetzen. Ist dies technisch nicht möglich, so ist sie mit 8 Stunden anzusetzen. „Scheine“, die innerhalb eines Faches als Zulassungsvoraussetzung für die Teilprüfung oder Vorprüfung erworben und als solche bereits berücksichtigt wurden, müssen nicht herausgerechnet werden (erlaubte Doppelzählung).
+Der im Studienplan nicht mit einer Stundenzahl verbundene abschließende kommissionelle Teil der zweiten Diplomprüfung („Endprüfung“) im Sinn einiger auslaufend noch anzuwendenden besonderen Studiengesetze wird mit 2 Stunden angesetzt.
+Diplomarbeiten werden mit 6 Stunden, Dissertationen mit 8 Stunden angesetzt.
+Semesterstundenzahlen über 99 sind mit 99 anzugeben
+				"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='pruefung']//xs:element[@name='semesterstundenpositiv']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Semesterstundenzahl mit positiver Beurteilung für Fach-1 oder Fach-2"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaetenantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="pruefungsaktivitaetenantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="pruefungsaktivitaetenantwort" description="Root Objekt des pruefungsaktivitaeten Responses"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaetenantwort']//xs:element[@name='studiumpruefungen']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Aktuell von der anfragenden BE gemeldete Prüfungsaktivitäten (bezogen auf die aktuelle Matrikelnummer im angefragten Semester). Falls keine Prüfungsaktivitäten gemeldet wurden, entfällt das Element" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+<!-- 		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaetenantwort']//xs:element[@name='datenstand']"> -->
+<!-- 			<annox:annotate> -->
+<!-- 				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Tag der Datenermittlung (kann früher als der tatsächliche Abfragezeitpunkt sein)." required="true" dataType="java.util.Date" example="1964-01-15"/> -->
+<!-- 			</annox:annotate> -->
+<!-- 		</jaxb:bindings> -->
+		 
+<!-- 		 <jaxb:bindings node="xs:complexType[@name='studentpruefungen']"> -->
+<!-- 			<annox:annotate> -->
+<!-- 				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="studentpruefungen" description="Liste von Prüfungsaktivitäten zur Matrikelnummer."/> -->
+<!-- 			</annox:annotate> -->
+<!-- 		</jaxb:bindings> -->
+		
+<!-- 		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaet']"> -->
+<!-- 		</jaxb:bindings> 		   -->
+		 
+
+<!-- 		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaet']//xs:element[@name='fach']"> -->
+<!-- 			<annox:annotate> -->
+<!-- 				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Details siehe Objekt Studienfach"/> -->
+<!-- 			</annox:annotate> -->
+<!-- 		</jaxb:bindings>  -->
+		 
+<!-- 		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaet']//xs:element[@name='semesterzahl']"> -->
+<!-- 			<annox:annotate> -->
+<!-- 				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Erreichte Zahl fortgesetzt gemeldeter Semester einschließlich des Berichtssemesters bei Einfachstudien oder im ersten Unterrichtsfach eines Lehramtsstudiums bzw. zweiten Unterrichtsfach oder Spezialisierung eines Lehramtsstudiums"/> -->
+<!-- 			</annox:annotate> -->
+<!-- 		</jaxb:bindings> -->
+<!-- 		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaet']//xs:element[@name='semesterstunden']"> -->
+<!-- 			<annox:annotate> -->
+<!-- 				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Semesterstunden Fach-1 oder Fach-2"/> -->
+<!-- 			</annox:annotate> -->
+<!-- 		</jaxb:bindings> -->
+<!-- 		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaet']//xs:element[@name='semesterstundenpositiv']"> -->
+<!-- 			<annox:annotate> -->
+<!-- 				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Semesterstunden mit positiver Beurteilung Fach-1 oder Fach-2"/> -->
+<!-- 			</annox:annotate> -->
+<!-- 		</jaxb:bindings>		 -->
+<!-- 		<jaxb:bindings node="xs:complexType[@name='pruefungsaktivitaet']//xs:element[@name='ects']"> -->
+<!-- 			<annox:annotate> -->
+<!-- 				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="ECTS Punkte Fach-1 oder Fach-2"/> -->
+<!-- 			</annox:annotate> -->
+<!-- 		</jaxb:bindings>		 -->
+		
+		<!-- **************************************  ABSCHLÜSSE    ******************************************************************************************************************************    -->
+		 <jaxb:bindings node="xs:complexType[@name='abschlussanfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="abschlussanfrage"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="abschlussanfrage" 
+				description="Uebermittlung der Abschluesse. Alle ordentlichen Studien sowie Universitaets- und Vorbereitungslehrgaenge, 
+				zu denen eine Pruefung eingetragen ist, die einen Studienabschnitt oder das Stuium als Genzes abschliesst (Bachelor-, Diplom-, Master- oder Abschlusspruefung, Rigorosum) sind zu uebermitteln"/>
+			</annox:annotate>
+		</jaxb:bindings>
+ 
+		
+		<jaxb:bindings node="xs:complexType[@name='abschlussantwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="abschlussantwort"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="abschlussantwort" 	
+				description="Ergebnisrückmeldung nach Verarbeitung der Abschlüsse. Gegebenenfalls wird eine Liste von Fehlermeldungen zurueckgeliefert. Falls die Fehlerliste leer ist, wurde der Antrag vollstaendig und fehlerfrei verarbeitet."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='abschluss']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="abschluss" 	
+				description="Detailinformation zu einem einzelnen Abschlussereignis. Hinweis: Der Abschluss *KANN* den vollständigen Abschlussvektor enthalten. Bei der Meldung von Abschlüssen muss jedoch für jedes Element ein eigener Abschluss gemeldet werden (bei einem S-Abschluss ist daher immer ein vorhergehender R-Abschluss notwendig)."/>
+			</annox:annotate>
+			<ci:code>
+	<![CDATA[
+    
+    public XMLGregorianCalendar getAbschlussdatum() {
+    	if (abschlussvektor == null || abschlussvektor.size() < 1)
+    		return null;
+    	return abschlussvektor.get(0);
+    }
+    
+    public void setAbschlussdatum(XMLGregorianCalendar abschlussdatum) {
+    	getAbschlussvektor().add(abschlussdatum);
+    }
+
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='abschluss']//xs:element[@name='abschlussart']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Studienabschnitte [RWSPU ]" example="R"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='abschluss']//xs:element[@name='fach']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Studienfach 1 oder 2." example="1"/>
+			</annox:annotate>
+		</jaxb:bindings>  
+		
+		<jaxb:bindings node="xs:complexType[@name='abschluss']//xs:element[@name='abschlussdatum']">
+			<jaxb:property name="abschlussvektor"/>
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="abschlussdatum" required="true" dataType="java.util.Date" example="2015-10-01"/> 
+			</annox:annotate>
+		</jaxb:bindings>  
+		 
+		 <!-- **************************************  NACHWEISE    ******************************************************************************************************************************    -->
+
+		<jaxb:bindings node="xs:complexType[@name='NachweisAntwortListe']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="nachweisliste"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="nachweisliste" description="Falls zu den Daten (Matrikelnummer, BE-Kennung, Semester) mindestens ein Nachweis gefunden wird, liefert das Webservice diese Antwort. In der Antwort können auch meherer Nachweise vorhanden sein. Falls es zu den Abfrageparametern keine Nachweise gibt, wird als Http_Stats NOT_FOUND gemeldet und keine Antwort geliefert."/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='NachweisAntwort']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="nachweisantwort"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="nachweisantwort" description="Ergebnis der Nachweis-Verarbeitung. Die Fehlerliste informiert über eventuell auftretende Probleme bei der Übernahme des gemeldeten Nachweises. Falls Z-Fehler auftreten, wird dies durch einen HTTP-Status 422 UNPROCESSABLE_ENTITY signalisiert. Die Response enthält stattdessen eine `FehlerAntwort` und der Request wird **nicht verarbeitet**!"/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='NachweisAnfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="nachweisanfrage"  namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="nachweisanfrage" description="Übermittlung der Nachweise, die der Beitragstatus (die auch in Stammdaten der Studierende und in der Vorschreibung vorkommt) der Studierende abbildet."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='NachweisAnfrage']//xs:element[@name='nachweis']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="2" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		 
+		<jaxb:bindings node="xs:complexType[@name='nachweis']//xs:element[@name='gueltig']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="5" value="Dieses Flag kennzeichnet die Gültigkeit eines Nachweises. Dieses Element wird vom Datenverbund bestimmt und ist im Request *NICHT* erforderlich." required="true" example="J"/>
+			</annox:annotate>
+		</jaxb:bindings> 
+		
+		<jaxb:bindings node="xs:complexType[@name='nachweis']//xs:element[@name='einbringung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="4" value="Einbringungsdatum des Nachweises. Im Request ist dieses Feld *NICHT* erforderlich. Das Einbringungsdatum wird automatisch gleich dem Meldedatum (= Zeitpunkt des Aufrufes) gesetzt." required="false" dataType="java.util.Date"  example="2019-03-20" /> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='nachweis']//xs:element[@name='dauer']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="3" value="Anzahl der Semester(von 0 bis 99). die der Nachweis gueltig ist. Die Gueltigkeitsdauer muss jedes Semester neu berechnet werden. wenn der Nachweis im aktuellen Semester wieder gemeldet wird " required="true"  example="1"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+	
+		<jaxb:bindings node="xs:complexType[@name='nachweis']//xs:element[@name='code']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="2" value="Gültige Code [HZVTRFN]." required="true" example="H"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+	
+	
+		<jaxb:bindings node="xs:complexType[@name='nachweis']//xs:element[@name='studierendenkey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="1" value="Studierendenkey besteht aus Tripel (Matrikel, BE-Kennzeichen und Semesterkennzeichen)" required="true" example="H"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+	
+	<!-- **************************************  STUDIERENDENKEY    ******************************************************************************************************************************    -->
+		<jaxb:bindings node="xs:complexType[@name='Studierendenkey']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value ="Studierendenkey" description="Studierendenkey besteht aus Tripel (Matrikel, BE-Kennzeichen und Semesterkennzeichen)."/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='Studierendenkey']//xs:element[@name='matrikel']">
+			<annox:annotate target="field">
+    			<annox:annotate annox:class="javax.validation.Valid"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Matrikelnummer" hidden="true" position="1" required="false"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		
+		<jaxb:bindings node="xs:complexType[@name='Studierendenkey']//xs:element[@name='be']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Zweistellige Kennung der Bildungseinrichtung" position="2" required="true" example="UB"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='Studierendenkey']//xs:element[@name='semester']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="fuenfstelliges Semester-Kennzeichen" position="3" required="true" example="2019S"/> 
+			</annox:annotate>
+		</jaxb:bindings>
+	  	
+		<jaxb:bindings node="xs:complexType[@name='uniSemesterAnfrage']//xs:element[@name='be']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" example="UA"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='abstractAnfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" value="abstractAnfrage" description="Das Basis-Element für Anfrage-XML." hidden="true" />
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='abstractAnfrage']//xs:element[@name='uuid']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" position="0" example="NULL"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<!-- **************************************  STUDIENBERECHTIGUNGEN    ******************************************************************************************************************************    -->
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigunganfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studienberechtigunganfrage" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+		 		<annox:annotate annox:class="io.swagger.annotations.ApiModel" value ="studienberechtigunganfrage" description="Root Element der studienberechtigung.xml Abfrage"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigunganfrage']//xs:element[@name='studienberechtigungliste']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Enthält 1-n Studienberechtigungsprüfungen" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+				<jaxb:bindings node="xs:complexType[@name='studienberechtigunganfrage']//xs:element[@name='be']">
+		 	<annox:annotate>
+		 		<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Kennung jener Bildungseinrichtung, von der die Daten gemeldet wurden." required="true" example="UE"/>
+		 	</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigungliste']//xs:element[@name='studienberechtigung']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Liste enthält alle zu übermittelten Studienberechtigungsprüfungen" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+				 
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigung']//xs:element[@name='matrikelnummer']">
+		 	<annox:annotate>
+		 		<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="achtstellig, nummerisch mit führenden Nullen. Gibt es in diesem Fall keine Matrikelnummer dann ist 00000000 zu übermitteln" required="true" position="1" example="01812345"/>
+		 	</annox:annotate>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigung']//xs:element[@name='fallnr']">
+			 <annox:annotate>
+			 	<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="laufende Nummer des Studienberechtigungsfalles an der Bildungseinrichtung" required="true" position="6" example="12345"/>
+			 </annox:annotate>
+		</jaxb:bindings>
+ 		<jaxb:bindings node="xs:complexType[@name='studienberechtigung']//xs:element[@name='geburtsdatum']">
+		 	<annox:annotate>
+		 		<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value ="Geburtsdatum der Person." required="true" dataType="java.util.Date" example="1964-01-15" position="9"/>
+		 	</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigung']//xs:element[@name='geschlecht']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Geschlecht der Person: M=männlich, W=weiblich, X=divers" required="true" position="10" example="W"/>
+			</annox:annotate>
+		</jaxb:bindings>		 
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigung']//xs:element[@name='staatsbuergerschaft']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Staatsbürgerschaft der Person. Staaten-Code gemäß Uni-CODEX." required="true" position="11" example="A"/>
+			</annox:annotate>
+		</jaxb:bindings>	
+		<jaxb:bindings node="xs:complexType[@name='studienkennzahlen']//xs:element[@name='skz1']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value = "beantragte SBP-Studienrichtungsgruppe-1" required="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienkennzahlen']//xs:element[@name='skz2']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value = "beantragte SBP-Studienrichtungsgruppe-2" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienkennzahlen']//xs:element[@name='skz3']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="beantragte SBP-Studienrichtungsgruppe-3" required="false"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigung']//xs:element[@name='zulassungsdatum']">
+		 	<annox:annotate>
+		 		<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value ="Datum des Antrages auf Zulassung zur Studienberechtigungsprüfung" required="true" dataType="java.util.Date" example="1964-01-15" position="12"/>
+		 	</annox:annotate>
+		</jaxb:bindings>
+ 		<jaxb:bindings node="xs:complexType[@name='studienberechtigung']//xs:element[@name='pruefungsdatum']">
+		 	<annox:annotate>
+		 		<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value ="Datum der Studienberechtigungsprüfung" required="true" dataType="java.util.Date" example="1964-01-15" position="13"/>
+		 	</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigungantwort']">
+			<annox:annotate>
+		 		<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="studienberechtigungantwort" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+		 		<annox:annotate annox:class="io.swagger.annotations.ApiModel" value ="studienberechtigungantwort" description="Root Element der studienberechtigung.xml Antwort"/>
+		 	</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='simplePhysicalPerson']//xs:element[@name='gebdat']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value ="Geburtsdatum der Person."  required="true" example="1987-02-01"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='kennzahlenliste']//xs:attribute[@name='datenstand']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Tag der Datenermittlung (kann früher als der tatsächliche Abfragezeitpunkt sein)." required="true" example="2019-07-10"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings  node="xs:complexType[@name='emailadressenListe']">
+			<annox:annotate>
+				<annox:annotate annox:class="java.lang.Deprecated"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Veraltet! Nicht mehr verwenden!" hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:element[@name='batch2restanfragen']">
+			<annox:annotate>
+				<annox:annotate annox:class="javax.xml.bind.annotation.XmlRootElement" name="batch2restanfragen" namespace="http://www.brz.gv.at/datenverbund-unis"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="Zusammenfassung einer Gruppe von Webservice-Requests und Feed-Messages zu einer XML-Struktur. Mit Hilfe dieser Struktur können Batch-Dateien (Sendedatei und Empfangsdatei) als strukturiertes XML dargestellt werden." hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='batch2restanfrage']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModel" description="XML-Darstellung eines Webservice-Requests (bei Anfragen durch die BE) oder einer Response (bei Feed-Messages an die BE)." hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='batch2restanfrage']//xs:element[@name='abstractanfrage']">
+				<annox:annotate xmlns:annox="http://annox.dev.java.net" target="field">
+					@javax.xml.bind.annotation.XmlAnyElement(lax = true)
+					<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Request-Body bei POST/PUT-Requests."/>
+				</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='batch2restanfrage']//xs:element[@name='link']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="URI einer Webservice-Anfrage. Bei HEAD/GET-Requests inklusive Request-Parameter."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='batch2restanfrage']//xs:element[@name='httpmethod']">
+			<annox:annotate>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="HTTP-Methode zur Unterscheidung von POST/PUT/DELETE, bzw. HEAD/GET."/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='batch2restanfrage']//xs:element[@name='abstractantwort']">
+				<annox:annotate xmlns:annox="http://annox.dev.java.net" target="field">
+					@javax.xml.bind.annotation.XmlAnyElement(lax = true)
+					<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" value="Response-Body der zugrundeliegenden Feed-Message."/>
+				</annox:annotate>
+		</jaxb:bindings>
+		
+	<!-- BRZ spezifische Erweiterungen, die i.A. nur serverseitig verfuegbar sind -->
+
+		<jaxb:bindings node="xs:complexType[@name='studentInfoMitbelegung']">
+			<ci:code>
+	<![CDATA[
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "")
+    public String getMatrikel() {
+    	return matrikelOrMatrikelnummer.getValue();
+    }
+    
+    public String getMatrikelnummer() {
+    	return matrikelOrMatrikelnummer.getValue();
+    }
+    
+	@Deprecated
+    public void setMatrikel(String m) {
+    	ObjectFactory factory = new ObjectFactory();
+    	matrikelOrMatrikelnummer = factory.createStudentInfoMitbelegungMatrikel(m);
+    }
+    
+    public void setMatrikelnummer(String m) {
+    	ObjectFactory factory = new ObjectFactory();
+    	matrikelOrMatrikelnummer = factory.createStudentInfoMitbelegungMatrikelnummer(m);
+    }
+
+	/**
+	 * Matrikelnummer abfragen. Clients k&ouml;nnen weiterhin sowohl
+	 * das Element 'matrikel' als auch 'matrikelnummer' verwenden.
+	 * Diese Methode selektiert das neuere Element 'matrikelnummer', wenn
+	 * es gesetzt wurde. Andernfalls 'matrikel'. Wenn beide vorhanden sind,
+	 * wird daher nur 'matrikelnummer' verwendet.
+	 * @return 'matrikelnummer', falls vorhanden; andernfalls 'matrikel'
+	 */
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "")
+	public String getMatrikelOrNummer()
+	{
+		return getMatrikelOrMatrikelnummer().getValue();
+	}
+
+	/**
+	 * Matrikelnummer aktualisieren. Clients k&ouml;nnen weiterhin sowohl
+	 * das Element 'matrikel' als auch 'matrikelnummer' verwenden. Falls
+	 * nur 'matrikel' belegt ist, wird auch dieses Element aktualisiert.
+	 * Ansernfalls wird 'matrikelnummer' aktualisiert und 'matrikel'
+	 * auf null gesetzt.
+	 */
+	@Deprecated
+	public void setMatrikelOrNummer(String matrikelnummer)
+	{
+		setMatrikelOrMatrikelnummer(new JAXBElement(new javax.xml.namespace.QName("matrikelnummer"), String.class, matrikelnummer));
+	}
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+		<jaxb:bindings node="xs:complexType[@name='FullStudentInfo']">
+			<ci:code>
+	<![CDATA[
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "")
+    public String getMatrikel() {
+    	return studierendenkey.getMatrikelnummer();
+    }
+    
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "")
+    public String getBe() {
+    	return studierendenkey.getBe();
+    }
+    
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "")
+    public String getSemester() {
+    	return studierendenkey.getSemester();
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='ExtendedStudierendenKey']">
+			<ci:code>
+	<![CDATA[
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "")
+    public String getMatrikel() {
+    	return matrikelOrMatrikelnummer.getValue();
+    }
+    
+    public String getMatrikelnummer() {
+    	return matrikelOrMatrikelnummer.getValue();
+    }
+    
+	@Deprecated
+    public void setMatrikel(String m) {
+    	ObjectFactory factory = new ObjectFactory();
+    	matrikelOrMatrikelnummer = factory.createStudentInfoMitbelegungMatrikel(m);
+    }
+    
+    public void setMatrikelnummer(String m) {
+    	ObjectFactory factory = new ObjectFactory();
+    	matrikelOrMatrikelnummer = factory.createStudentInfoMitbelegungMatrikelnummer(m);
+    }
+
+	/**
+	 * Matrikelnummer abfragen. Clients k&ouml;nnen weiterhin sowohl
+	 * das Element 'matrikel' als auch 'matrikelnummer' verwenden.
+	 * Diese Methode selektiert das neuere Element 'matrikelnummer', wenn
+	 * es gesetzt wurde. Andernfalls 'matrikel'. Wenn beide vorhanden sind,
+	 * wird daher nur 'matrikelnummer' verwendet.
+	 * @return 'matrikelnummer', falls vorhanden; andernfalls 'matrikel'
+	 */
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "")
+	public String getMatrikelOrNummer()
+	{
+		return getMatrikelOrMatrikelnummer().getValue();
+	}
+
+	/**
+	 * Matrikelnummer aktualisieren. Clients k&ouml;nnen weiterhin sowohl
+	 * das Element 'matrikel' als auch 'matrikelnummer' verwenden. Falls
+	 * nur 'matrikel' belegt ist, wird auch dieses Element aktualisiert.
+	 * Ansernfalls wird 'matrikelnummer' aktualisiert und 'matrikel'
+	 * auf null gesetzt.
+	 */
+	@Deprecated
+	public void setMatrikelOrNummer(String matrikelnummer)
+	{
+		setMatrikelOrMatrikelnummer(new JAXBElement(new javax.xml.namespace.QName("matrikelnummer"), String.class, matrikelnummer));
+	}
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='PersonMeldungV2']">
+			<ci:code>
+	<![CDATA[
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "")
+    public String getMatrikel() {
+    	return matrikelOrMatrikelnummer.getValue();
+    }
+    
+    public String getMatrikelnummer() {
+    	return matrikelOrMatrikelnummer.getValue();
+    }
+    
+	@Deprecated
+    public void setMatrikel(String m) {
+    	ObjectFactory factory = new ObjectFactory();
+    	matrikelOrMatrikelnummer = factory.createStudentInfoMitbelegungMatrikel(m);
+    }
+    
+    public void setMatrikelnummer(String m) {
+    	ObjectFactory factory = new ObjectFactory();
+    	matrikelOrMatrikelnummer = factory.createStudentInfoMitbelegungMatrikelnummer(m);
+    }
+
+	/**
+	 * Matrikelnummer abfragen. Clients k&ouml;nnen weiterhin sowohl
+	 * das Element 'matrikel' als auch 'matrikelnummer' verwenden.
+	 * Diese Methode selektiert das neuere Element 'matrikelnummer', wenn
+	 * es gesetzt wurde. Andernfalls 'matrikel'. Wenn beide vorhanden sind,
+	 * wird daher nur 'matrikelnummer' verwendet.
+	 * @return 'matrikelnummer', falls vorhanden; andernfalls 'matrikel'
+	 */
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "")
+	public String getMatrikelOrNummer()
+	{
+		return getMatrikelOrMatrikelnummer().getValue();
+	}
+
+	/**
+	 * Matrikelnummer aktualisieren. Clients k&ouml;nnen weiterhin sowohl
+	 * das Element 'matrikel' als auch 'matrikelnummer' verwenden. Falls
+	 * nur 'matrikel' belegt ist, wird auch dieses Element aktualisiert.
+	 * Ansernfalls wird 'matrikelnummer' aktualisiert und 'matrikel'
+	 * auf null gesetzt.
+	 */
+	@Deprecated
+	public void setMatrikelOrNummer(String matrikelnummer)
+	{
+		setMatrikelOrMatrikelnummer(new JAXBElement(new javax.xml.namespace.QName("matrikelnummer"), String.class, matrikelnummer));
+	}
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='vorschreibung']">
+			<ci:code>
+	<![CDATA[
+	@Deprecated
+	@ApiModelProperty(hidden = true, required = false, value = "Virtuelles Attribute, das die Summe aus `oehbeitrag` und `sonderbeitrag` liefert.")
+    public java.math.BigDecimal getSemesterbeitrag() {
+    	
+    	return java.math.BigDecimal.valueOf(this.getOehbeitrag() + this.getSonderbeitrag()).movePointLeft(2);
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='Studierendenkey']">
+			<ci:code>
+<![CDATA[
+	public Studierendenkey() {
+	}
+	
+	public Studierendenkey(String matrikel, String be, String semester) {
+		this.setMatrikelnummer(matrikel);
+		this.be = be;
+		this.semester = semester;
+	}
+
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Studierendenkey))
+			return false;
+		if (!this.getMatrikelOrMatrikelnummer().getValue().equals(((Studierendenkey)obj).getMatrikelOrMatrikelnummer().getValue()))
+			return false;
+		if (!this.semester.equals(((Studierendenkey)obj).semester))
+			return false;
+		if (!this.be.equals(((Studierendenkey)obj).be))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return java.text.MessageFormat.format("{0}.{1}.{2}", getMatrikelOrMatrikelnummer().getValue(), be, semester);
+	}
+	
+    @ApiModelProperty(required = true, value="Matrikelnummer des/der Studierenden. Ab API 0.5 wurde die Bezeichnung des Elementes von `matrikel` auf `matrikenummer` geaendert. Bitte nur mehr diese Variante verwenden!", example="52000001")
+	public String getMatrikelnummer() {
+		return getMatrikelOrMatrikelnummer().getValue();
+	}
+	
+	public void setMatrikelnummer(String m) {
+		this.setMatrikelOrMatrikelnummer((new ObjectFactory()).createStudierendenkeyMatrikelnummer(m));
+	}
+	
+    @ApiModelProperty(required = false, hidden=true)
+    @Deprecated
+	public String getMatrikel() {
+		return getMatrikelOrMatrikelnummer().getValue();
+	}
+	
+	public void setMatrikel(String m) {
+		this.setMatrikelOrMatrikelnummer((new ObjectFactory()).createStudierendenkeyMatrikel(m));
+	}
+]]>
+			</ci:code>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='studienkennung']">
+			<ci:code>
+	<![CDATA[
+		@ApiModelProperty(hidden = true, required = false, value = "Virtuelles Attribut, das einen Kennzahlenstring aus dem Objekt erzeugt (besondere toString-Variante).")
+	    public String toRef() {
+    	
+			StringBuilder kennungRef = new StringBuilder();
+			kennungRef.append(getStudiengesetz().trim());
+			kennungRef.append(getBezulassung().trim());
+			kennungRef.append(getSkz1().trim());
+			if (getSkz2() != null)
+				kennungRef.append(getSkz2().trim());
+			if (getSkz3() != null)
+				kennungRef.append(getSkz3().trim());
+			if (getBezwei() != null)
+				kennungRef.append(getBezwei().trim());
+			return kennungRef.toString();
+    	}
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='pruefung']">
+			<ci:code>
+	<![CDATA[
+	    public void setEcts(int n) {
+	    	Pruefung.Ects e = new Pruefung.Ects();
+	    	e.setBezug("gesamt");
+	    	e.setValue(n);
+	    	getEcts().add(e);
+	    }
+	    public int getEctsGesamt() {
+	    	return getEcts().stream().map(ects->ects.getValue()).collect(java.util.stream.Collectors.summingInt(Integer::intValue));
+	    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+
+		<jaxb:bindings node="xs:complexType[@name='simpleBpkResponse']">
+			<ci:code>
+	<![CDATA[
+    @ApiModelProperty(required = false, value="Bereichsspezifisches Personenkennzeichen (Bereich BF).")
+    public String getBpk() {
+    	if (personenkennzeichenOrBpk != null && personenkennzeichenOrBpk.getName().getLocalPart().equals("bpk"))
+    		return personenkennzeichenOrBpk.getValue();
+    	return null;
+    }
+    
+    public void setBpk(String bpk) {
+    	ObjectFactory factory = new ObjectFactory();
+    	personenkennzeichenOrBpk = factory.createSimpleBpkResponseBpk(bpk);
+    }
+    
+	@Deprecated
+    @ApiModelProperty(required=false, hidden=true)
+    public String getPersonenkennzeichen() {
+    	if (personenkennzeichenOrBpk != null && personenkennzeichenOrBpk.getName().getLocalPart().equals("personenkennzeichen"))
+    		return personenkennzeichenOrBpk.getValue();
+    	return null;
+    }
+    
+	@Deprecated
+    public void setPersonenkennzeichen(String pkz) {
+    	ObjectFactory factory = new ObjectFactory();
+    	personenkennzeichenOrBpk = factory.createSimpleBpkResponsePersonenkennzeichen(pkz);
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+    
+		<jaxb:bindings node="xs:complexType[@name='fehler']">
+			<ci:code>
+	<![CDATA[
+    public String getDatenfeld() {
+    	
+    	if (this.datenfeldOrQuelleOrFehlerquelle instanceof String)
+    		return (String) this.datenfeldOrQuelleOrFehlerquelle;
+    	if (this.datenfeldOrQuelleOrFehlerquelle instanceof Fehlerquelle)
+    		return ((Fehlerquelle) datenfeldOrQuelleOrFehlerquelle).getDatenfeld();
+    	return null;
+    }
+    
+    public void setDatenfeld (String datenfeld) {
+    	this.datenfeldOrQuelleOrFehlerquelle = datenfeld;
+    }
+    
+    public void setFehlerquelle (Fehlerquelle q) {
+    	this.setDatenfeldOrQuelleOrFehlerquelle(q);
+    }
+    
+    public void setQuelle(Studierendenkey k) {
+    	this.setDatenfeldOrQuelleOrFehlerquelle(k);
+    }
+
+    @Override
+	public String toString() {
+		StringBuilder b = new StringBuilder ("Fehler ");
+		b.append(getFehlernummer());
+		b.append(": ");
+		b.append(getDatenfeld());
+		b.append(" (");
+		b.append(getFeldinhalt());
+		b.append("): ");
+		b.append(getFehlertext());
+		b.append(" - ");
+		b.append(getMassnahme());
+		return b.toString();
+	}
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='studentInfoExtended']">
+			<ci:code>
+	<![CDATA[
+    public String getSvnr() {
+    	if (svnrOrEkz != null && svnrOrEkz != null && svnrOrEkz.getName().getLocalPart().equals("svnr"))
+    		return svnrOrEkz.getValue();
+    	return null;
+    }
+    
+    public String getEkz() {
+    	if (svnrOrEkz != null && svnrOrEkz.getName().getLocalPart().equals("ekz"))
+    		return svnrOrEkz.getValue();
+    	return null;
+    }
+    
+    public void setEkz(String ekz) {
+    	String svnr = getSvnr();
+    	if (svnr != null)
+    		throw new UnsupportedOperationException ("Person hat bereits eine SVNR: " + svnr); 
+    	ObjectFactory factory = new ObjectFactory();
+    	svnrOrEkz = factory.createStudentInfoExtendedEkz(ekz);
+    }
+    
+    public void setSvnr(String svnr) {
+    	ObjectFactory factory = new ObjectFactory();
+    	svnrOrEkz = factory.createStudentInfoExtendedSvnr(svnr);
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='phPersonId']">
+			<ci:code>
+	<![CDATA[
+    public String getSvnr() {
+    	if (svnrOrEkz != null && svnrOrEkz != null && svnrOrEkz.getName().getLocalPart().equals("svnr"))
+    		return svnrOrEkz.getValue();
+    	return null;
+    }
+    
+    public String getEkz() {
+    	if (svnrOrEkz != null && svnrOrEkz.getName().getLocalPart().equals("ekz"))
+    		return svnrOrEkz.getValue();
+    	return null;
+    }
+    
+    public void setEkz(String ekz) {
+    	String svnr = getSvnr();
+    	if (svnr != null)
+    		throw new UnsupportedOperationException ("Person hat bereits eine SVNR: " + svnr); 
+    	ObjectFactory factory = new ObjectFactory();
+    	svnrOrEkz = factory.createStudentInfoExtendedEkz(ekz);
+    }
+    
+    public void setSvnr(String svnr) {
+    	ObjectFactory factory = new ObjectFactory();
+    	svnrOrEkz = factory.createStudentInfoExtendedSvnr(svnr);
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='studienberechtigung']">
+			<ci:code>
+	<![CDATA[
+    public String getSvnr() {
+    	if (svnrOrEkz != null && svnrOrEkz != null && svnrOrEkz.getName().getLocalPart().equals("svnr"))
+    		return svnrOrEkz.getValue();
+    	return null;
+    }
+    
+    public String getEkz() {
+    	if (svnrOrEkz != null && svnrOrEkz.getName().getLocalPart().equals("ekz"))
+    		return svnrOrEkz.getValue();
+    	return null;
+    }
+    
+    public void setEkz(String ekz) {
+    	String svnr = getSvnr();
+    	if (svnr != null)
+    		throw new UnsupportedOperationException ("Person hat bereits eine SVNR: " + svnr); 
+    	ObjectFactory factory = new ObjectFactory();
+    	svnrOrEkz = factory.createStudentInfoExtendedEkz(ekz);
+    }
+    
+    public void setSvnr(String svnr) {
+    	ObjectFactory factory = new ObjectFactory();
+    	svnrOrEkz = factory.createStudentInfoExtendedSvnr(svnr);
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='ekzAntwort']">
+			<ci:code>
+	<![CDATA[
+    public List<EkzAnforderung> getEkzAnforderung() {
+		return (List<EkzAnforderung>) (List<?>) java.util.Collections.unmodifiableList(getEkzAnforderungOrEkzForcierung().stream().filter(s -> (s instanceof EkzAnforderung))
+				.collect(java.util.stream.Collectors.toList()));
+    }
+    
+    public List<EkzForcierung> getEkzForcierung() {
+		return (List<EkzForcierung>) (List<?>) java.util.Collections.unmodifiableList(getEkzAnforderungOrEkzForcierung().stream().filter(s -> (s instanceof EkzForcierung))
+				.collect(java.util.stream.Collectors.toList()));
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:element[@name='ekzUseCase']">
+			<ci:code>
+	<![CDATA[
+    public List<EkzAnforderung> getEkzAnforderung() {
+		return (List<EkzAnforderung>) (List<?>) java.util.Collections.unmodifiableList(getEkzAnforderungOrEkzForcierung().stream().filter(s -> (s instanceof EkzAnforderung))
+				.collect(java.util.stream.Collectors.toList()));
+    }
+    
+    public List<EkzForcierung> getEkzForcierung() {
+		return (List<EkzForcierung>) (List<?>) java.util.Collections.unmodifiableList(getEkzAnforderungOrEkzForcierung().stream().filter(s -> (s instanceof EkzForcierung))
+				.collect(java.util.stream.Collectors.toList()));
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+		
+		<jaxb:bindings node="xs:complexType[@name='studentInfo']">
+			<ci:code>
+	<![CDATA[
+    public EmailListe getEmailliste() {
+    	if (emaillisteOrEmailadressen instanceof EmailListe)
+    		return (EmailListe) emaillisteOrEmailadressen;
+    	return null;
+    }
+    
+    public EmailadressenListe getEmailadressen() {
+    	if (emaillisteOrEmailadressen instanceof EmailadressenListe)
+    		return (EmailadressenListe) emaillisteOrEmailadressen;
+    	return null;
+    }
+    
+    public void setEmailliste(EmailListe l) {
+    	emaillisteOrEmailadressen = l;
+    }
+    
+    public void setEmailadressen(EmailadressenListe l) {
+    	emaillisteOrEmailadressen = l;
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+		
+<jaxb:bindings node="(xs:complexType[@name='StudienDaten']//xs:choice)[1]">
+  <jaxb:property name="meldung" />
+  <annox:annotate target="field">
+    <annox:annotate annox:class="javax.validation.Valid"/>
+    <annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true"/>
+  </annox:annotate>
+</jaxb:bindings>
+
+
+		<jaxb:bindings node="xs:complexType[@name='StudienDaten']">
+			<ci:code>
+	<![CDATA[
+    @io.swagger.annotations.ApiModelProperty(required = false, hidden = true)
+    public boolean isFh() {
+    	boolean result = false;
+    	for (Serializable item : getMeldung()) {
+    		if (item instanceof StudiumMeldung)
+    			return false;
+    		result |= (item instanceof StudiumMeldungFH);
+    		result |= (item instanceof LehrgangMeldungFH);
+    	}
+    	return result;
+    }
+    
+	@SuppressWarnings("unchecked")
+    @io.swagger.annotations.ApiModelProperty(required = false, value="Studiendaten von Universitäten oder Pädagogischen Hochschulen. FHs verwenden `studiengang` oder `lehrgang`.")
+	public List<StudiumMeldung> getStudium() {
+		return (List<StudiumMeldung>) (List<?>) java.util.Collections.unmodifiableList(getMeldung().stream().filter(s -> (s instanceof StudiumMeldung))
+				.collect(java.util.stream.Collectors.toList()));
+	}
+    
+	@SuppressWarnings("unchecked")
+    @io.swagger.annotations.ApiModelProperty(required = false, value="Studiendaten von Fachhochschulen zur Meldung von ordentlich Studierenden. Uni/PH verwenden `studium`.")
+	public List<StudiumMeldungFH> getStudiengang() {
+		return (List<StudiumMeldungFH>) (List<?>) java.util.Collections.unmodifiableList(getMeldung().stream().filter(s -> (s instanceof StudiumMeldungFH))
+				.collect(java.util.stream.Collectors.toList()));
+	}
+    
+	@SuppressWarnings("unchecked")
+    @io.swagger.annotations.ApiModelProperty(required = false, value="Lehrgangsdaten von Fachhochschulen zur Meldung von außerordentlich Studierenden. Uni/PH verwenden `studium`.")
+	public List<LehrgangMeldungFH> getLehrgang() {
+		return (List<LehrgangMeldungFH>) (List<?>) java.util.Collections.unmodifiableList(getMeldung().stream().filter(s -> (s instanceof LehrgangMeldungFH))
+				.collect(java.util.stream.Collectors.toList()));
+	}
+    
+	@SuppressWarnings("unchecked")
+    @io.swagger.annotations.ApiModelProperty(required = false, hidden = true)
+	public List<LehrgangMeldungFH> getFhStudien() {
+		return (List<LehrgangMeldungFH>) (List<?>) java.util.Collections.unmodifiableList(
+			getMeldung().stream().filter(
+				s -> ((s instanceof LehrgangMeldungFH) || (s instanceof StudiumMeldungFH))
+			)
+				.collect(java.util.stream.Collectors.toList()));
+	}
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+    
+		<jaxb:bindings node="xs:complexType[@name='studiumpruefung']">
+			<ci:code>
+	<![CDATA[
+    public Studienkennung getStudienkennung() {
+    	if (getStudienkennungOrStudiengang() instanceof Studienkennung)
+    		return (Studienkennung) getStudienkennungOrStudiengang();
+    	return null;
+    }
+    
+    public String getStudiengang() {
+    	if (this.getStudienkennungOrStudiengang() instanceof String)
+    		return (String) this.getStudienkennungOrStudiengang();
+    	return null;
+    }
+    
+    public void setStudienkennung (Studienkennung k) {
+    	this.setStudienkennungOrStudiengang(k);
+    }
+    
+    public void setStudiengang (String g) {
+    	this.setStudienkennungOrStudiengang(g);
+    }
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+    
+		<jaxb:bindings node="xs:complexType[@name='studienliste']">
+			<ci:code>
+	<![CDATA[
+    @ApiModelProperty(required = false, value="Studiendaten von Universitäten und Pädagogischen Hochschulen. Fachhochschulen verwenden `studiengang` und/oder `lehrgang`.")
+	public List<Studium> getStudium() {
+		return new SubList<Studium>(getStudiumOrStudiengangOrLehrgang(), Studium.class);
+	}
+    
+    @ApiModelProperty(required = false, value="Studiendaten von Fachhochschulen zur Meldung von ordentlich Studierenden. Uni/PH verwenden `studium`.")
+	public List<StudiumMeldungFH> getStudiengang() {
+		return new SubList<StudiumMeldungFH>(getStudiumOrStudiengangOrLehrgang(), StudiumMeldungFH.class);
+	}
+    
+    @ApiModelProperty(required = false, value="Lehrgangsdaten von Fachhochschulen zur Meldung von außerordentlich Studierenden. Uni/PH verwenden `studium`.")
+	public List<LehrgangMeldungFH> getLehrgang() {
+		return new SubList<LehrgangMeldungFH>(getStudiumOrStudiengangOrLehrgang(), LehrgangMeldungFH.class);
+	}
+	]]>
+			</ci:code>
+		</jaxb:bindings>
+ 
+		<jaxb:bindings node="(xs:complexType[@name='studienliste']//xs:choice)[1]">
+			<jaxb:property name="studiumOrStudiengangOrLehrgang" />
+			<annox:annotate target="field">
+				<annox:annotate annox:class="javax.validation.Valid"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="(xs:complexType[@name='ekzAntwort']//xs:choice)[1]">
+			<annox:annotate target="field">
+				<annox:annotate annox:class="javax.validation.Valid"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="(xs:element[@name='ekzUseCase']//xs:choice)[1]">
+			<annox:annotate target="field">
+				<annox:annotate annox:class="javax.validation.Valid"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="(xs:complexType[@name='fehler']//xs:choice)[1]">
+			<annox:annotate target="field">
+				<annox:annotate annox:class="javax.validation.Valid"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="(xs:complexType[@name='mitbelegungAntwort']//xs:choice)[1]">
+			<annox:annotate target="field">
+				<annox:annotate annox:class="javax.validation.Valid"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="(xs:complexType[@name='studentInfo']//xs:choice)[1]">
+			<annox:annotate target="field">
+				<annox:annotate annox:class="javax.validation.Valid"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings node="(xs:complexType[@name='studiumpruefung']//xs:choice)[1]">
+			<annox:annotate target="field">
+				<annox:annotate annox:class="javax.validation.Valid"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+		<jaxb:bindings multiple="true" node="//xs:group[@ref='svnrOrEkz']">
+			<annox:annotate target="field">
+				<annox:annotate annox:class="javax.validation.Valid"/>
+				<annox:annotate annox:class="io.swagger.annotations.ApiModelProperty" required="false" hidden="true"/>
+			</annox:annotate>
+		</jaxb:bindings>
+
+	</jaxb:bindings>
+
+</jaxb:bindings>

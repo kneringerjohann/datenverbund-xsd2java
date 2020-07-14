@@ -1,0 +1,1 @@
+Property target-package anpassen, damit der eigene Package-Namespace verwendet werden kann.
